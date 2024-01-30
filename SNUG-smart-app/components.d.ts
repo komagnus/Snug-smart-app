@@ -10,6 +10,7 @@ declare module 'vue' {
     Cardnr3: typeof import('./src/components/mainComponents/Cardnr3.vue')['default']
     Cardnr4: typeof import('./src/components/mainComponents/Cardnr4.vue')['default']
     ChartCard: typeof import('./src/components/mainComponents/ChartCard.vue')['default']
+    ChartView: typeof import('./src/components/mainComponents/ChartView.vue')['default']
     HumidityCard: typeof import('./src/components/mainComponents/HumidityCard.vue')['default']
     MainContent: typeof import('./src/components/MainContent.vue')['default']
     PowerPriceCard: typeof import('./src/components/mainComponents/PowerPriceCard.vue')['default']

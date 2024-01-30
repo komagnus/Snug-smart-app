@@ -1,7 +1,7 @@
 <template>
     <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
        <v-row v-if="!loading" class="text-h1" style="margin: 10px; margin-top: 20%;">
-        {{ weather }}
+        {{ weather + '°' }}
        </v-row>
        <v-row v-else>loading...</v-row>
        <v-row class="text-h5" style="margin: 10px;">

@@ -25,8 +25,8 @@ export interface TimeSeries {
     };
   }
   export interface PowerPriceSeries {
-    NOK_per_kWh: string,
-    EUR_per_kWh: string,
+    NOK_per_kWh: number,
+    EUR_per_kWh: number,
     EXR: number,
     time_start: String,
     time_end: String,
@@ -42,7 +42,7 @@ export async function getWeatherForecastByArea(lat: number, lon: number): Promis
   }
 }
 
-export async function getCurrentPowerPrice(year: string, month: string, day: string, priceArea: string): Promise<any> {
+export async function getCurrentPowerPrice(year: string, month: string, day: string, priceArea: string): Promise<PowerPriceSeries[]> {
   try {
     const response = await powerPriceAxiosInstance.get(`/${year}/${month}-${day}_${priceArea}.json`);
     return response.data;
