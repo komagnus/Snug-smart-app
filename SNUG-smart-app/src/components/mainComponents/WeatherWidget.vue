@@ -12,6 +12,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getWeatherForecastByArea, TimeSeries  } from '@/utils/APIRequests'
+import { currentTimeUTCOption1 } from '@/utils/globalUtils'
 const weather = ref(null);
 const backgroundColor = ref('');
 const loading = ref(false)
@@ -22,9 +23,8 @@ onMounted(async () => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const lat = position.coords.latitude;
       const lon = position.coords.longitude;
-
       const weatherData = await getWeatherForecastByArea(lat, lon);
-      const currentTimeUTC = new Date().toISOString().slice(0, 14) + '00:00Z';
+      const currentTimeUTC = currentTimeUTCOption1;
       const matchedTimeseries = weatherData.properties.timeseries.find(
         (timeseries: TimeSeries) => timeseries.time === currentTimeUTC
       );

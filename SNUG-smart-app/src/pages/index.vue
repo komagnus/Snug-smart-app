@@ -3,7 +3,7 @@
   <MainContent/>
 </template>
 
-<script setup>
+<script lang="ts">
 import TopBar from '@/components/TopBar.vue';
-import MainContent from '@/components/MainContent.Vue'
+import MainContent from '@/components/MainContent.vue'
 </script>
