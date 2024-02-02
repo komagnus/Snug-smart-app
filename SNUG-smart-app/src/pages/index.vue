@@ -1,9 +1,7 @@
 <template>
-  <TopBar/>
-  <MainContent/>
+  <LoginPage />
 </template>
 
-<script lang="ts">
-import TopBar from '@/components/TopBar.vue';
-import MainContent from '@/components/MainContent.vue'
+<script setup lang="ts">
+import LoginPage from '@/pages/LoginPage.vue';
 </script>

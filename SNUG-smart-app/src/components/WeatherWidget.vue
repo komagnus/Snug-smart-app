@@ -1,10 +1,10 @@
 <template>
     <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
-       <v-row v-if="!loading" class="text-h1" style="margin: 10px; margin-top: 20%;">
-        {{ weather }}
+       <v-row v-if="!loading"  style="font-size: 7vh; position: absolute;">
+        {{ weather + '°' }}
        </v-row>
        <v-row v-else>loading...</v-row>
-       <v-row class="text-h5" style="margin: 10px;">
+       <v-row  style="font-size: 2vh; position: absolute; margin-top: 40%;">
         Current temperature
        </v-row>
     </v-card>
