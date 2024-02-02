@@ -4,12 +4,14 @@
 </template>
   
   <script lang="ts">
-  import { temperature } from '@/utils/globalUtils';
   import slider from "vue3-slider"
   export default {
+    props: {
+      initValue: Number
+  },
   data() {
     return {
-      myNumber: temperature,
+      myNumber: this.initialValue,
     };
   },
   name: "TemperatureSlider",

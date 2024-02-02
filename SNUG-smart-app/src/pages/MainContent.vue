@@ -11,15 +11,11 @@
         <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 25vw; margin-top: 10%;">
         <DeviceData />
         </v-row>
-        <v-row style="display: flex; justify-content: center; margin-top: 10%;">
-            <TemperatureKnob style="width: 87%;"/>
-        </v-row>
     </v-container>
 </template>
 <script setup lang="ts">
 import WeatherWidget from "@/components/WeatherWidget.vue";
 import PowerPriceCard from "@/components/PowerPriceCard.vue";
-import TemperatureKnob from "@/components/TemperatureKnob.vue";
 import ChartView from "@/components/ChartView.vue";
 import  TopBar   from '@/components/TopBar.vue'
 import DeviceData from "@/components/DeviceData.vue";

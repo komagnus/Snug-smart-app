@@ -7,7 +7,7 @@ import { defineComponent } from 'vue';
 import { LineChart } from 'vue-chart-3';
 import { Chart, registerables } from "chart.js";
 import { getCurrentPowerPrice, PowerPriceSeries } from '@/utils/APIRequests'
-import { currentTimeUTCOption2 } from '@/utils/globalUtils'
+import { currentTimeUTCOption2, tomorrowUTCTime } from '@/utils/globalUtils'
 import { ref } from 'vue';
 
 Chart.register(...registerables);
@@ -17,10 +17,11 @@ export default defineComponent({
   setup() {
     const loadData = async () => {
       const currentTimeInISOFormat = currentTimeUTCOption2;
-      console.log(currentTimeInISOFormat)
+      const tomorrow = tomorrowUTCTime
       const [datePart, timePart] = currentTimeInISOFormat.split('T');
+      const [tomorrowDatePart, tomorrowTimePart] = tomorrow.split('T');
       const [year, month, day] = datePart.split('-');
-      const dayToUse = '31'
+      const [tomorrowYear, tomorrowMonth, tomorrowDay] = tomorrowDatePart.split('-');
       const currentTime = new Date(Date.parse(currentTimeInISOFormat));
       currentTime.setHours(currentTime.getHours() + 1);
       const hours = currentTime.getHours();
@@ -32,7 +33,7 @@ export default defineComponent({
       });
       const nokValues2: number[] = [];
       if(hours >= 13) {
-        const powerData2 = await getCurrentPowerPrice(year, month, dayToUse, priceArea);
+      const powerData2 = await getCurrentPowerPrice(year, tomorrowMonth, tomorrowDay, priceArea);
       powerData2.forEach(entry => {
         nokValues2.push(entry.NOK_per_kWh);
       });
