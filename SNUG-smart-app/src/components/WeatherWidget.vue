@@ -5,7 +5,7 @@
        </v-row>
        <v-row v-else>loading...</v-row>
        <v-row  style="font-size: 2vh; position: absolute; margin-top: 40%;">
-        Current temperature
+        Current outdoor temperature
        </v-row>
     </v-card>
 </template>
@@ -14,7 +14,6 @@ import { ref, onMounted } from 'vue';
 import { getWeatherForecastByArea, TimeSeries  } from '@/utils/APIRequests'
 import { currentTimeUTCOption1 } from '@/utils/globalUtils'
 const weather = ref(null);
-const backgroundColor = ref('');
 const loading = ref(false)
 
 onMounted(async () => {

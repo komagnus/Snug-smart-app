@@ -13,7 +13,6 @@ declare module 'vue' {
     PowerPriceChart: typeof import('./src/components/PowerPriceChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    TemperatureKnob: typeof import('./src/components/TemperatureKnob.vue')['default']
     TemperatureSlider: typeof import('./src/components/TemperatureSlider.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
     WeatherWidget: typeof import('./src/components/WeatherWidget.vue')['default']
