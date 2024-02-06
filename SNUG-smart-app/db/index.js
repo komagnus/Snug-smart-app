@@ -28,7 +28,7 @@ app.get("/db/snugeusmartapp/getUser",(request, response) => {
     })
 })
 app.post("/db/snugeusmartapp/addUser",multer().none(),(request, response) => {
-    database.collection('devicedatacollection').counst({}, function(error, numOfDocs){
+    database.collection('devicedatacollection').count({}, function(error, numOfDocs){
         database.collection('devicedatacollection').insertOne({
             userid:(numOfDocs+1).toString(),
             username: request.body.username,

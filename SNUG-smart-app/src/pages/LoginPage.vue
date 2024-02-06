@@ -8,7 +8,6 @@
       <v-card class="mx-auto px-6 py-8" style="width: 60%; min-width: 300px; max-width: 600px;">
       <v-form
         v-model="form"
-        @submit.prevent="getUser"
       >
       <v-text-field
           v-if="expandedForm"
@@ -77,7 +76,7 @@
           block
           color="success"
           size="large"
-          type="submit"
+          @click="getUser"
           variant="elevated"
         >
           Sign In
@@ -87,9 +86,9 @@
           :disabled="!form"
           :loading="loading"
           block
+          @click="addUser"
           color="success"
           size="large"
-          type="submit"
           variant="elevated"
         >
           Sign Up
@@ -102,7 +101,7 @@
   <script setup lang="ts">
   import { useRouter } from 'vue-router';
   import  TopBar   from '@/components/TopBar.vue'
-  import { getUserFromDB } from '@/utils/APIRequests'
+  import { getUserFromDB, addUserToDB } from '@/utils/APIRequests'
 import { ref } from 'vue';
 const router = useRouter();
 const username = ref('')
@@ -115,15 +114,34 @@ const loading = ref(false)
 const expandedForm = ref(false)
 const deviceSerialNumber = ref('')
 async function getUser() {
-  try{
-  const checkUser = await getUserFromDB(username.value, password.value)
-  if(checkUser ==true) {
-    router.push('/maincontent');
-  }
+try{
+  loading.value = true;
+  const checkUser = await getUserFromDB()
+  checkUser.data.forEach((user: {userid: string; username: string; userpw: string;}) => {
+    if(user.username === username.value && user.userpw === password.value) {
+      router.push('/mainContent')
+    } else {
+      incorrectLogin.value = true
+    }
+  });
+  console.log(checkUser.data);
   } catch(e){
     console.log(e)
+  } finally {
+    loading.value = false;
   }
-  
+}
+
+async function addUser() {
+  try {
+    loading.value = true;
+    await addUserToDB(username.value, password.value)
+  } catch(e) {
+    console.log(e)
+  } finally {
+    loading.value = false;
+  }
+
 }
 const incorrectLogin = ref(false)
   function required(v: any) {

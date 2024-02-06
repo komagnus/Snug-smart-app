@@ -103,7 +103,11 @@ export interface LocationInfo {
   lng: number,
   usageHours: Record<string, any>,
 }
-
+export interface UserInfo {
+  userid: string,
+  username: string,
+  userpw: string
+}
 
 export async function getWeatherForecastByArea(lat: number, lon: number): Promise<any> {
   try {
@@ -201,44 +205,24 @@ export async function getDataFromDB () {
     throw e;
   }
 }
-export async function getUserFromDB (userName:string, pw: string) {
-  const exists = ref(false)
-  const checked = ref(false)
+export async function getUserFromDB() {
   try {
-    axios.get(dbConnectionURl + "db/snugeusmartapp/getUser").then(
-      (response)=> {
-       if(response.data){
-       }
-          response.data.forEach((element: { userid: string; username: string; userpw: string; _id: string}) => {
-            
-            if(element.username == userName && element.userpw == pw) {
-              checked.value = true
-              exists.value = true
-              console.log('here')
-              console.log(exists.value)
-              return exists.value;
-            }
-          })
-      }
-    )
-    if(checked.value === true && exists.value === false){
-      console.log(exists.value)
-      return exists.value;
-    }
+    const userinfo = axios.get(dbConnectionURl + "db/snugeusmartapp/getUser")
+    return userinfo;
   } catch(e) {
     console.log(e)
     throw e;
   }
 }
-export async function addUser (userName: string, userPw: string) {
+export async function addUserToDB (userName: string, userPw: string) {
   const body = {
     username: userName,
     userpw: userPw
   }
   try {
-    axios.post(dbConnectionURl + "db/snugeusmartapp/addDevice", body).then(
+    axios.post(dbConnectionURl + "db/snugeusmartapp/addUser", body).then(
       (response)=> {
-        getDataFromDB();
+        getUserFromDB();
       }
     )
   } catch(e) {
