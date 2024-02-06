@@ -19,34 +19,6 @@
           label="Name"
         ></v-text-field>
         <v-text-field
-          v-if="expandedForm"
-          v-model="airthingsUsername"
-          :readonly="loading"
-          :rules="[required]"
-          class="mb-2"
-          clearable
-          label="Airthings account username"
-        ></v-text-field>
-        <v-text-field
-          v-if="expandedForm"
-          v-model="airthingsPassword"
-          type="password"
-          :readonly="loading"
-          :rules="[required]"
-          class="mb-2"
-          clearable
-          label="Airthings account password"
-        ></v-text-field>
-        <v-text-field
-          v-if="expandedForm"
-          v-model="deviceSerialNumber"
-          :readonly="loading"
-          :rules="[required]"
-          class="mb-2"
-          clearable
-          label="Airthings device serial number"
-        ></v-text-field>
-        <v-text-field
           v-model="username"
           :readonly="loading"
           :rules="[required]"
@@ -62,6 +34,24 @@
           type="password"
           label="Password"
           placeholder="Enter your password"
+        ></v-text-field>
+        <v-text-field
+          v-if="expandedForm"
+          v-model="clientid"
+          :readonly="loading"
+          :rules="[required]"
+          clearable
+          label="Client ID"
+          placeholder="Enter your airthings account ClientID"
+        ></v-text-field>
+        <v-text-field
+          v-if="expandedForm"
+          v-model="clientsecret"
+          :readonly="loading"
+          :rules="[required]"
+          clearable
+          label="Clientsecret"
+          placeholder="Enter your airthings account ClientSecret"
         ></v-text-field>
         <p v-if="incorrectLogin" style="color: red;">Incorrect email and/or password</p>
         <br>
@@ -101,11 +91,14 @@
   <script setup lang="ts">
   import { useRouter } from 'vue-router';
   import  TopBar   from '@/components/TopBar.vue'
-  import { getUserFromDB, addUserToDB } from '@/utils/APIRequests'
+  import { getUserFromDB, addUserToDB, addDeviceToDB, createAccountToken } from '@/utils/APIRequests'
 import { ref } from 'vue';
 const router = useRouter();
 const username = ref('')
 const password = ref('')
+const clientid = ref('')
+const clientsecret = ref('')
+const serialNumber = ref('')
 const name = ref('')
 const airthingsUsername = ref('')
 const airthingsPassword = ref('')
@@ -136,6 +129,9 @@ async function addUser() {
   try {
     loading.value = true;
     await addUserToDB(username.value, password.value)
+    const token = await createAccountToken(clientid.value, clientsecret.value)
+    //add function to select the device you want to use
+    await addDeviceToDB(clientid.value, clientsecret.value, serialNumber.value)
   } catch(e) {
     console.log(e)
   } finally {

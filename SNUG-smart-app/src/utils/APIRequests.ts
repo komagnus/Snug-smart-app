@@ -230,10 +230,11 @@ export async function addUserToDB (userName: string, userPw: string) {
     throw e;
   }
 }
-export async function addDeviceToDB (clientID: string, clientSecret: string) {
+export async function addDeviceToDB (clientID: string, clientSecret: string, serialNumber: string) {
   const body = {
     clientid: clientID,
-    clientsecret: clientSecret
+    clientsecret: clientSecret,
+    serialnumber: serialNumber
   }
   try {
     axios.post(dbConnectionURl + "db/snugeusmartapp/addDevice", body).then(
