@@ -45,7 +45,6 @@ onMounted(async () => {
     }
     powerPrice.value = formattedValue;   
   }
-  console.log(powerPrice.value)
     if(powerPrice.value < 100) {
       fontColor.value = 'green'
     } else {
