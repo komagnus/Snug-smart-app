@@ -20,9 +20,8 @@
     </v-expansion-panel>
 </template>
 <script setup lang="ts">
-const expanded = false;
 const items = [
     { text: 'Edit account', icon: 'mdi-account' },
-    { text: 'Log out', icon: 'mdi-log-out' },
+    { text: 'Log out', icon: 'mdi-logout' },
 ]
 </script>

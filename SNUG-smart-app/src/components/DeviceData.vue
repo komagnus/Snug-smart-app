@@ -61,7 +61,7 @@
 </v-dialog>
 </template>
 <script setup lang="ts">
-import { createAccountToken, getDeviceInfo } from '@/utils/APIRequests';
+import { createAccountToken, getDeviceData, getDataFromDB } from '@/utils/APIRequests';
 import { ref, onMounted, computed } from 'vue';
 
 const loading = ref(false)
@@ -80,17 +80,17 @@ const humidityColor = ref('black')
 const pmColor = ref('black')
 const radonValueColor = ref('black')
 const vocColor = ref('black')
-
-
 const formattedTemp = computed(() => {
   return temp.value.toFixed(1); 
 })
 onMounted(async () => {
   try {
+    const dbValues = await getDataFromDB()
+    console.log(dbValues)
     loading.value = true
     const getToken = await createAccountToken('a0b5890d-06ae-43a5-84db-a337cdde35f9', '38d977b1-fb1a-4ae0-a06c-cb7c91edd28c')
     const accessToken = getToken.access_token
-    const deviceData = await getDeviceInfo('2960080965', accessToken)
+    const deviceData = await getDeviceData('2960080965', accessToken)
     currentTempt.value = deviceData.data.temp
     temp.value = deviceData.data.temp
     battery.value = deviceData.data.battery
@@ -99,7 +99,6 @@ onMounted(async () => {
     pm.value = deviceData.data.pm25
     radonValue.value = deviceData.data.radonShortTermAvg
     voc.value = deviceData.data.voc
-    console.log(deviceData)
     if(battery.value >= 70) {
       batteryColor.value = 'Green'
     } else if(battery.value < 30){

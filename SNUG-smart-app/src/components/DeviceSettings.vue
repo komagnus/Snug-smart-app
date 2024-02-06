@@ -1,27 +1,56 @@
 <template>
     <v-expansion-panel
-    title="Device settings">
-    <v-list>
-      <v-list-item
-        v-for="(item, i) in items"
-        :key="i"
-        :value="item"
-        color="primary"
-        rounded="shaped"
-      >
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon"></v-icon>
-        </template>
-
-        <v-list-item-title v-text="item.text"></v-list-item-title>
-      </v-list-item>
-    </v-list>
+    title="Device settings"
+    style="display: flex; flex-direction: column; align-items: center;">
+    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleAddNewDevice">
+      <v-icon icon="mdi-server-plus" size="large"></v-icon>
+      <div>Add Device</div>
+    </v-btn>
+    <v-card v-if="addNewDevice" style="display: flex; flex-direction: column; align-items: center; width: 80%;">
+      <v-text-field
+      v-model="clientID"
+      label="Client ID"
+      required
+      hide-details
+      style="width: 100%;">
+      </v-text-field>
+      <v-text-field
+      v-model="clientSecret"
+      label="Client Secret"
+      required
+      hide-details
+      style="width: 100%;">
+      </v-text-field>
+      <v-btn @click="addDevice">Add device</v-btn>
+    </v-card>
+    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" >
+      <v-icon icon="mdi-access-point-network" size="large"></v-icon>
+      <div>Edit Device</div>
+    </v-btn>
+    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" >
+      <v-icon icon="mdi-database-edit-outline" size="large"></v-icon>
+      <div>Edit desired values</div>
+    </v-btn>
     </v-expansion-panel>
 </template>
 <script setup lang="ts">
-
-const items = [
-    { text: 'Edit device', icon: 'mdi-access-point-network' },
-    { text: 'Edit desired values', icon: 'mdi-database-edit-outline' },
-]
+import { addDeviceToDB } from '@/utils/APIRequests';
+import { ref } from 'vue';
+const addNewDevice = ref(false)
+const clientID = ref('')
+const clientSecret = ref('')
+function toggleAddNewDevice() {
+  if(addNewDevice.value === false) {
+    addNewDevice.value = true
+  } else {
+    addNewDevice.value = false
+  }
+}
+async function addDevice(){
+  try{
+    await addDeviceToDB(clientID.value, clientSecret.value)
+  } catch(e) {
+    console.log(e)
+  }
+} 
 </script>

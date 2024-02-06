@@ -8,7 +8,7 @@
       <v-card class="mx-auto px-6 py-8" style="width: 60%; min-width: 300px; max-width: 600px;">
       <v-form
         v-model="form"
-        @submit.prevent="redirectToLogin"
+        @submit.prevent="getUser"
       >
       <v-text-field
           v-if="expandedForm"
@@ -102,6 +102,7 @@
   <script setup lang="ts">
   import { useRouter } from 'vue-router';
   import  TopBar   from '@/components/TopBar.vue'
+  import { getUserFromDB } from '@/utils/APIRequests'
 import { ref } from 'vue';
 const router = useRouter();
 const username = ref('')
@@ -113,24 +114,18 @@ const form = ref(false)
 const loading = ref(false)
 const expandedForm = ref(false)
 const deviceSerialNumber = ref('')
+async function getUser() {
+  try{
+  const checkUser = await getUserFromDB(username.value, password.value)
+  if(checkUser ==true) {
+    router.push('/maincontent');
+  }
+  } catch(e){
+    console.log(e)
+  }
+  
+}
 const incorrectLogin = ref(false)
-  const redirectToLogin = () => {
-    if (!form.value) return
-        loading.value = true
-      if(expandedForm.value == false && username.value.toLowerCase() == "test@email.no") {
-        if(expandedForm.value == false  && password.value.toLowerCase() == "passord") {
-          router.push('/maincontent');
-        } else {
-          incorrectLogin.value = true
-          loading.value = false
-          return
-        }
-      } else {
-        incorrectLogin.value = true
-        loading.value = false
-        return
-      }
-  };
   function required(v: any) {
         return !!v || 'Field is required'
       }
