@@ -1,6 +1,6 @@
 <template>
     <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: space-evenly;">
-        <v-row v-if="!loading"  style="font-size: 7vh; position: absolute;">
+        <v-row v-if="!loading"  :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
             {{powerPrice }} 
         </v-row>
         <v-row v-else>loading...</v-row>
@@ -15,7 +15,8 @@ import { ref, onMounted } from 'vue';
 import { getCurrentPowerPrice, PowerPriceSeries } from '@/utils/APIRequests'
 import { currentTimeUTCOption2 } from '@/utils/globalUtils'
 const powerPrice = ref(0);
-const loading = ref(false)
+const loading = ref(false);
+const fontColor = ref('black');
 
 onMounted(async () => {
   try {
@@ -42,7 +43,14 @@ onMounted(async () => {
     } else {
         formattedValue = Math.floor(value * 100); 
     }
-    powerPrice.value = formattedValue;   } 
+    powerPrice.value = formattedValue;   
+  }
+  console.log(powerPrice.value)
+    if(powerPrice.value < 100) {
+      fontColor.value = 'green'
+    } else {
+      fontColor.value = 'red'
+    } 
   } catch (error) {
     console.error('Error fetching powerprice data:', error);
   } finally {

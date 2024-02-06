@@ -15,9 +15,10 @@
     v-model="temp"
     min="15"
     max="30"
-    style="width: 60%; margin-top: 40%;">
+    color="green"
+    style="width: 60%; margin-top: 50%;">
   </v-slider>
-  <v-row  style="font-size: 2vh; position: absolute; margin-top: 40%;">
+  <v-row  style="font-size: 2vh; position: absolute; margin-top: 60%;">
         Desired indoor temperature
   </v-row>
   </v-card>

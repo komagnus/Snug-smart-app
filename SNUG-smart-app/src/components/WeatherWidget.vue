@@ -1,6 +1,6 @@
 <template>
     <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
-       <v-row v-if="!loading"  style="font-size: 7vh; position: absolute;">
+       <v-row v-if="!loading"  :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
         {{ weather + '°' }}
        </v-row>
        <v-row v-else>loading...</v-row>
@@ -13,8 +13,9 @@
 import { ref, onMounted } from 'vue';
 import { getWeatherForecastByArea, TimeSeries  } from '@/utils/APIRequests'
 import { currentTimeUTCOption1 } from '@/utils/globalUtils'
-const weather = ref(null);
+const weather = ref(0);
 const loading = ref(false)
+const fontColor = ref('black')
 
 onMounted(async () => {
   try {
@@ -30,11 +31,19 @@ onMounted(async () => {
       if (matchedTimeseries) {
         weather.value = matchedTimeseries.data.instant.details.air_temperature;
       } 
+      if(weather.value < 0) {
+        fontColor.value = 'blue'
+      } else if (weather.value <= 10) {
+        fontColor.value = 'lightblue'
+      } else {
+        fontColor.value = 'red'
+      }
     });
   } catch (error) {
     console.error('Error fetching weather data:', error);
   } finally {
     loading.value = false
   }
+
 });
 </script>

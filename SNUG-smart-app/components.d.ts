@@ -7,8 +7,10 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AccountSettings: typeof import('./src/components/AccountSettings.vue')['default']
     ChartView: typeof import('./src/components/ChartView.vue')['default']
     DeviceData: typeof import('./src/components/DeviceData.vue')['default']
+    DeviceSettings: typeof import('./src/components/DeviceSettings.vue')['default']
     PowerPriceCard: typeof import('./src/components/PowerPriceCard.vue')['default']
     PowerPriceChart: typeof import('./src/components/PowerPriceChart.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
