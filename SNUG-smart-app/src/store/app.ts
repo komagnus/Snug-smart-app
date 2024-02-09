@@ -13,6 +13,7 @@ export const useAppStore = defineStore('app', {
         Lat: ref(0),
         Lng: ref(0)
       },
+      UserId: ref(''),
       UserName: ref(''),
       SerialNumber: ref('')
     }

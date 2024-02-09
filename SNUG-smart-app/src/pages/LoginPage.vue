@@ -101,6 +101,7 @@ async function getUser() {
     currentUser.Name = name.value
     currentUser.UserName = username.value
     currentUser.IsLoggedIn = loggedIn.value
+    currentUser.UserId = id.value
     currentUser.ClientID = clientid.value
     currentUser.ClientSecret = clientsecret.value
     currentUser.SerialNumber = serialNumber.value
@@ -125,11 +126,7 @@ async function addUser() {
       return
     } else {
       const userAdd = await addUserToDB(accessToken, username.value, password.value)
-      console.log(userAdd)
       userId.value = userAdd.insertedId
-      console.log(userId.value)
-      console.log(clientid.value)
-      console.log(clientsecret.value)
       if (!skipCheck.value) {
         const token = await createAccountToken(clientid.value, clientsecret.value)
         const deviceInfo = await getDeviceInfo(serialNumber.value, token.access_token)
@@ -146,6 +143,7 @@ async function addUser() {
     currentUser.Name = name.value
     currentUser.UserName = username.value
     currentUser.IsLoggedIn = loggedIn.value
+    currentUser.UserId = userId.value
     currentUser.ClientID = clientid.value
     currentUser.ClientSecret = clientsecret.value
     currentUser.SerialNumber = serialNumber.value

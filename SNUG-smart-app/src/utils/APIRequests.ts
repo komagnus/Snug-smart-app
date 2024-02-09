@@ -332,4 +332,58 @@ export async function addDeviceToDB(accessToken: string, userId: string, clientI
     console.error('Error:', error);
   }
 }
+export async function editDeviceInDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat:number, lng: number ) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "devicedatacollection",
+    filter: {userid: userId},
+    update: { $set: {clientid: clientId,
+      clientsecret: clientSecret,
+      serialnumber: serialNumber,
+      lat: lat,
+      lng: lng
+    }
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+export async function editUserInDB(accessToken: string, userId: string, userName: string, userPw: string) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "devicedatacollection",
+    filter: {userid: userId},
+    update: { $set: {
+      username: userName,
+      userpw: userPw
+    }
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
 
