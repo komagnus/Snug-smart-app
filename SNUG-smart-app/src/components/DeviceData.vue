@@ -157,7 +157,6 @@
 import { useAppStore } from '@/store/app';
 import { createAccountToken, getDeviceData } from '@/utils/APIRequests';
 import { ref, onMounted, computed } from 'vue';
-import { toast } from 'vue3-toastify';
 
 const loading = ref(false)
 const temp = ref(0)
@@ -180,9 +179,6 @@ const formattedTemp = computed(() => {
 })
 function updateTemperature() {
   console.log('Executed')
-  toast('Succesfully updated temperature', {
-    autoClose: 2000,
-  })
 }
 onMounted(async () => {
   try {

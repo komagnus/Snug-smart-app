@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from 'axios';
-import { ref } from 'vue';
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: 'https://api.met.no',
@@ -19,7 +18,13 @@ const accountAxiosInstance: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-const dbURl = 'https://eu-central-1.aws.data.mongodb-api.com/app/data-fxwjv/endpoint/data/v1/'
+const dbAccountAxiosInstance: AxiosInstance = axios.create({
+  baseURL: 'https://realm.mongodb.com/api/client/v2.0/app/data-fxwjv/auth/providers/local-userpass/login',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+const dbURl = 'https://eu-central-1.aws.data.mongodb-api.com/app/data-fxwjv/endpoint/data/v1'
 const dbConnectionURl = 'http://localhost:5038/'
 
 export interface TimeSeries {
@@ -118,6 +123,12 @@ export interface DbDeviceInfo {
   lat: number,
   lng: number
 }
+export interface TokenResponse {
+  access_token: string,
+  refresh_token: string,
+  user_id: string,
+  device_id: string
+}
 export async function getWeatherForecastByArea(lat: number, lon: number): Promise<any> {
   try {
     const response = await axiosInstance.get(`/weatherapi/locationforecast/2.0/compact?lat=${lat}&lon=${lon}`);
@@ -199,61 +210,6 @@ export async function getLocationInfo(locationID: string, accessToken: string): 
     throw error; 
   }
 }
-export async function getDeviceFromDB(): Promise<DbDeviceInfo[]>{
-  try {
-    const deviceInfo = await axios.get(dbConnectionURl + "db/snugeusmartapp/getDeviceInfo")
-    return deviceInfo.data;
-  } catch(e) {
-    console.log(e)
-    throw e;
-  }
-}
-export async function getUserFromDB(): Promise<UserInfo[]> {
-  try {
-    const userinfo = await axios.get(dbConnectionURl + "db/snugeusmartapp/getUser")
-    return userinfo.data;
-  } catch(e) {
-    console.log(e)
-    throw e;
-  }
-}
-export async function addUserToDB (name: string,userName: string, userPw: string) {
-  const body = {
-    name: name,
-    username: userName,
-    userpw: userPw
-  }
-  try {
-    axios.post(dbConnectionURl + "db/snugeusmartapp/addUser", body).then(
-      (response)=> {
-        return response.data;
-      }
-    )
-  } catch(e) {
-    console.log(e)
-    throw e;
-  }
-}
-export async function addDeviceToDB (userId: string, clientID: string, clientSecret: string, serialNumber: string, lat: number, lng: number,) {
-  const body = {
-    userid: userId,
-    clientid: clientID,
-    clientsecret: clientSecret,
-    serialnumber: serialNumber,
-    lat: lat,
-    lng: lng
-  }
-  try {
-    axios.post(dbConnectionURl + "db/snugeusmartapp/addDevice", body).then(
-      (response)=> {
-        getDeviceFromDB();
-      }
-    )
-  } catch(e) {
-    console.log(e)
-    throw e;
-  }
-}
 export async function getWeatherLinkData(stationId: string) {
   const deviceAxiosInstance: AxiosInstance = axios.create({
     baseURL: 'https://api.weatherlink.com/v2/',
@@ -269,33 +225,41 @@ export async function getWeatherLinkData(stationId: string) {
     throw error; 
   }
 }
-/*export async function getUserFromDB(userName: string) {
-  const apiKey = "FS7l3fI4e0K9lZl2wzEgPbqjzCMbfN6rYFVXPfVbLgc3qXxhTn6pZSTacKdwY4hy";
-  const data = {
-    dataSource: "SnugSmartApp",
-    database: "snugsmartappeudb",
-    collection: "userdatacollection",
-    filter: {
-      username: userName
-    }
-  };
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'apiKey': apiKey
-  };
-
+export async function createDbAccountToken() {
+  const requestBody = {
+    username: 'admin',
+    password: 'qo4atxzj3i3AMQQU'
+  }
   try {
-    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
+    const response = await dbAccountAxiosInstance.post('', requestBody);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function getDeviceFromDB(userId: string) {
-  const apiKey = "FS7l3fI4e0K9lZl2wzEgPbqjzCMbfN6rYFVXPfVbLgc3qXxhTn6pZSTacKdwY4hy";
+export async function getUserFromDB(userName: string, access_token: string) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "userdatacollection",
+    filter: {"username": userName}
+  };
+
+  const headers = {
+    Authorization: `Bearer ${access_token}`,
+    Accept: 'application/json'
+  }
+
+  try {
+    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+export async function getDeviceFromDB(userId: string, access_token: string) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -306,9 +270,8 @@ export async function getDeviceFromDB(userId: string) {
   };
 
   const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'apiKey': apiKey
+    Authorization: `Bearer ${access_token}`,
+    Accept: 'application/json'
   };
 
   try {
@@ -318,8 +281,8 @@ export async function getDeviceFromDB(userId: string) {
     console.error('Error:', error);
   }
 }
-export async function addUserToDB(userName: string, passWord: string ) {
-  const apiKey = "FS7l3fI4e0K9lZl2wzEgPbqjzCMbfN6rYFVXPfVbLgc3qXxhTn6pZSTacKdwY4hy";
+
+export async function addUserToDB(accessToken: string, userName: string, passWord: string ) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -331,9 +294,8 @@ export async function addUserToDB(userName: string, passWord: string ) {
   };
 
   const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'apiKey': apiKey
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
   };
 
   try {
@@ -343,24 +305,24 @@ export async function addUserToDB(userName: string, passWord: string ) {
     console.error('Error:', error);
   }
 }
-export async function addDeviceToDB(userId: string, clientId: string, clientSecret: string, serialNumber: string, lat:number, lng: number ) {
-  const apiKey = "FS7l3fI4e0K9lZl2wzEgPbqjzCMbfN6rYFVXPfVbLgc3qXxhTn6pZSTacKdwY4hy";
+export async function addDeviceToDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat:number, lng: number ) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
-    collection: "userdatacollection",
+    collection: "devicedatacollection",
     document: {
       userid: userId,
       clientid: clientId,
       clientsecret: clientSecret,
-      serialnumber: serialNumber
+      serialnumber: serialNumber,
+      lat: lat,
+      lng: lng
     }
   };
 
   const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'apiKey': apiKey
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
   };
 
   try {
@@ -370,6 +332,4 @@ export async function addDeviceToDB(userId: string, clientId: string, clientSecr
     console.error('Error:', error);
   }
 }
-*/
-
 

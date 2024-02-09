@@ -18,7 +18,7 @@ var database;
 app.listen(5038, () => {
     Mongoclient.connect(CONNECTION_STRING, (error, client) => {
         database = client.db(DATABASENAME);
-        console.log("Mongo DB Connection Succesfull");
+        console.log("Connected to DB");
     })
 })
 app.get("/db/snugeusmartapp/getDeviceInfo",(request, response) => {
