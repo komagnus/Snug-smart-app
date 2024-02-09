@@ -21,6 +21,13 @@
       hide-details
       style="width: 100%;">
       </v-text-field>
+      <v-text-field
+      v-model="serialNumber"
+      label="Serialnumber"
+      required
+      hide-details
+      style="width: 100%;">
+      </v-text-field>
       <v-btn @click="addDevice">Add device</v-btn>
     </v-card>
     <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" >
@@ -34,11 +41,15 @@
     </v-expansion-panel>
 </template>
 <script setup lang="ts">
-import { addDeviceToDB } from '@/utils/APIRequests';
+import { addDeviceToDB, getLocationInfo, createAccountToken, getDeviceInfo } from '@/utils/APIRequests';
 import { ref } from 'vue';
 const addNewDevice = ref(false)
 const clientID = ref('')
 const clientSecret = ref('')
+const userId = ref('')
+const lat = ref(0)
+const lng = ref(0)
+const serialNumber = ref('')
 function toggleAddNewDevice() {
   if(addNewDevice.value === false) {
     addNewDevice.value = true
@@ -48,7 +59,12 @@ function toggleAddNewDevice() {
 }
 async function addDevice(){
   try{
-    await addDeviceToDB(clientID.value, clientSecret.value)
+    const token = await createAccountToken(clientID.value, clientSecret.value)
+    const deviceInfo = await getDeviceInfo(serialNumber.value, token.access_token)
+    const locationInfo = await getLocationInfo(deviceInfo.location.id, token.access_token)
+    lat.value = locationInfo.lat
+    lng.value = locationInfo.lng
+    await addDeviceToDB(userId.value, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
   } catch(e) {
     console.log(e)
   }

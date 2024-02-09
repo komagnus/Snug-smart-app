@@ -33,9 +33,8 @@ app.get("/db/snugeusmartapp/getUser",(request, response) => {
 })
 app.post("/db/snugeusmartapp/addUser", async (request, response) => {
     try {
-        const numOfDocs = await database.collection('userdatacollection').countDocuments();
         await database.collection('userdatacollection').insertOne({
-            userid: (numOfDocs + 1).toString(),
+            userid: request.body.userid,
             username: request.body.username, 
             userpw: request.body.userpw
         });
@@ -47,11 +46,13 @@ app.post("/db/snugeusmartapp/addUser", async (request, response) => {
 });
 app.post("/db/snugeusmartapp/addDevice", async (request, response) => {
         try {
-            const numOfDocs = await database.collection('userdatacollection').countDocuments();
             await database.collection('devicedatacollection').insertOne({
-                userid: (numOfDocs+1).toString(),
+                userid: request.body.userid,
                 clientid:request.body.clientid,
-                clientsecret:request.body.clientsecret
+                clientsecret:request.body.clientsecret,
+                serialnumber: request.body.serialnumber,
+                lat: request.body.lat,
+                lng: request.body.lng
         })
         response.json("Added Succesfully");
         } catch (e) {

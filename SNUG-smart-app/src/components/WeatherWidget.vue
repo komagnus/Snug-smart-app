@@ -11,23 +11,19 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { createAccountToken, getWeatherForecastByArea, getLocationInfo, TimeSeries  } from '@/utils/APIRequests'
+import {  getWeatherForecastByArea, TimeSeries  } from '@/utils/APIRequests'
 import { currentTimeUTCOption1 } from '@/utils/globalUtils'
-import { getDeviceInfo } from '@/utils/APIRequests';
+import { useAppStore } from '@/store/app';
 const weather = ref(0);
 const loading = ref(false)
 const fontColor = ref('black')
+const userStore = useAppStore()
 
 onMounted(async () => {
   try {
     loading.value = true
-    const getToken = await createAccountToken('a0b5890d-06ae-43a5-84db-a337cdde35f9', '38d977b1-fb1a-4ae0-a06c-cb7c91edd28c')
-    const accessToken = getToken.access_token
-    const deviceInfo = await getDeviceInfo('2960080965', accessToken)
-    const locationID = deviceInfo.location.id
-    const locationInfo = await getLocationInfo(locationID, accessToken)
-    const lat = locationInfo.lat;
-    const lon = locationInfo.lng;
+    const lat = userStore.User.ClientLocation.Lat;
+    const lon = userStore.User.ClientLocation.Lng;
     const weatherData = await getWeatherForecastByArea(lat, lon);
     const currentTimeUTC = currentTimeUTCOption1;
     const matchedTimeseries = weatherData.properties.timeseries.find(

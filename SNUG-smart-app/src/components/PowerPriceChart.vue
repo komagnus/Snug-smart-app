@@ -1,5 +1,5 @@
 <template>
-  <LineChart style="width: 90%;" :chartData="data" :options="options" />
+  <LineChart style="width: 90%;" :chartData="data" :options="options"/>
 </template>
 
 <script lang="ts">
@@ -44,19 +44,44 @@ export default defineComponent({
         datasets: [
           {
             label: 'Power price today',
-            backgroundColor: 'green',
+            borderColor: 'green',
             data: nokValues,
+            borderRadius: 2, 
           },
           {
             label: 'Power price tomorrow',
-            backgroundColor: 'blue',
+            borderColor: 'blue',
             data: nokValues2,
+            borderRadius: 2, 
           }
         ],
       };
       const options = {
         responsive: true,
         maintainAspectRatio: false,
+        elements: {
+          line: {
+            borderWidth: 10,
+            tension: 0.6,
+          },
+          point: {
+            radius: 0, 
+            hoverRadius: 10,
+            backgroundColor: 'black'
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false, 
+            },
+          },
+          y: {
+            grid: {
+              display: false,
+            },
+          },
+        },
       };
 
       return { data, options };

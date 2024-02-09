@@ -19,5 +19,15 @@ import PowerPriceCard from "@/components/PowerPriceCard.vue";
 import ChartView from "@/components/ChartView.vue";
 import  TopBar   from '@/components/TopBar.vue'
 import DeviceData from "@/components/DeviceData.vue";
+import { useAppStore } from "@/store/app";
+import { onMounted } from 'vue'
+import router from "@/router";
 
+const userStore = useAppStore()
+const name = userStore.User.Name
+onMounted( () => {
+    /*if(!userStore.User.IsLoggedIn) {
+        router.push('/')
+    }*/
+})
 </script>

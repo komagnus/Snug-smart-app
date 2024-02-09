@@ -16,8 +16,10 @@
     min="15"
     max="30"
     color="green"
-    style="width: 60%; margin-top: 50%;">
-  </v-slider>
+    style="width: 60%; margin-top: 50%;"
+    @change="console.log('test')"
+    >
+    </v-slider>
   <v-row  style="font-size: 2vh; position: absolute; margin-top: 60%;">
         Desired indoor temperature
   </v-row>
@@ -30,30 +32,121 @@
       <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: batteryColor}">
         <v-row  :style="{fontSize: '5vh', position: 'absolute'}">{{ battery  }} <span style="font-size: 3vh; align-self: center;">%</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Battery Percentage</v-row> 
+      <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props"  >
+            mdi-information-outline
+              </v-icon>
+        </template>
+        <span>The battery status of the device you are connected to</span>
+      </v-tooltip>
+    </v-col>
       </v-card>
       <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: co2Color}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ co2 }} <span style="font-size: 3vh; align-self: center;">ppm</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 50%">Co2 Level</v-row>
+        <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props"  >
+            mdi-information-outline
+              </v-icon>
+        </template>
+        <span>
+          Most researchers agree that carbon dioxide levels 
+          <br/>
+          that are below 800 ppm are considered ideal. 
+          <br/>
+          Generally values over 1000ppm indicate potential
+          <br/>
+           issues with air circulation
+        </span>
+      </v-tooltip>
+    </v-col>
       </v-card>
     </v-row>
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: humidityColor}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ humidity }}<span style="font-size: 3vh; align-self: center;">%</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Humidity</v-row>
+        <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props"  >
+            mdi-information-outline
+              </v-icon>
+        </template>
+        <span>
+          Indoor environments with a humidity level of below 
+          <br/>
+          30%-40% make the spread of infections more likely, 
+          <br/>
+          while fungi and mold are more likely to grow if level
+          <br/>
+           is over 70%. Therefore is 41-69% the ideal level. </span>
+      </v-tooltip>
+    </v-col>
       </v-card>
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: pmColor}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ pm }}<span style="font-size: 3vh; align-self: center;">µg/m3</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Particulate matter</v-row>
+        <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props"  >
+            mdi-information-outline
+              </v-icon>
+        </template>
+        <span>
+          There are no "Optimal level" for Particulate matter, 
+          <br/>
+          however, the recommended limit is 5 µg/m3
+        </span>
+      </v-tooltip>
+    </v-col>
       </v-card>
     </v-row>
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: radonValueColor}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ radonValue }}<span style="font-size: 3vh; align-self: center;"> Bq/m3</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Radon value</v-row>
+        <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props"  >
+            mdi-information-outline
+              </v-icon>
+          </template>
+          <span>
+            There is no set "Optimal level" for radon levels. 
+            <br/>
+            However, The World Health Organization states that 
+            <br/>
+            levels belo 100 Bq/m3 are not a cause for concern
+          </span>
+          </v-tooltip>
+        </v-col>
       </v-card>
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: vocColor}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ voc }}<span style="font-size: 3vh; align-self: center;">ppb</span>  </v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Volatile organic compound</v-row>
+        <v-col style="align-self: flex-end;">
+        <v-tooltip location="bottom"  >
+        <template v-slot:activator="{ props }">
+          <v-icon v-bind="props" >
+            mdi-information-outline
+              </v-icon>
+        </template>
+        <span>
+          Airborne chemicals (VOCs) consist of many substances of 
+          <br/>
+          varying toxicity which can cause eyes, nose, and throat 
+          <br/>
+          irritation. Any value below 250ppb is no cause for concern
+        </span>
+      </v-tooltip>
+    </v-col>
       </v-card>
     </v-row>
     <v-btn style="margin: 5%;" @click="showMoreDeviceData = false">Close</v-btn>
@@ -61,8 +154,10 @@
 </v-dialog>
 </template>
 <script setup lang="ts">
-import { createAccountToken, getDeviceData, getDataFromDB } from '@/utils/APIRequests';
+import { useAppStore } from '@/store/app';
+import { createAccountToken, getDeviceData } from '@/utils/APIRequests';
 import { ref, onMounted, computed } from 'vue';
+import { toast } from 'vue3-toastify';
 
 const loading = ref(false)
 const temp = ref(0)
@@ -74,23 +169,29 @@ const currentTempt = ref(0)
 const radonValue = ref(0)
 const voc = ref(0)
 const showMoreDeviceData = ref(false);
-const batteryColor = ref('black')
-const co2Color = ref('black')
-const humidityColor = ref('black')
-const pmColor = ref('black')
-const radonValueColor = ref('black')
-const vocColor = ref('black')
+const batteryColor = ref('grey')
+const co2Color = ref('grey')
+const humidityColor = ref('grey')
+const pmColor = ref('grey')
+const radonValueColor = ref('grey')
+const vocColor = ref('grey')
 const formattedTemp = computed(() => {
   return temp.value.toFixed(1); 
 })
+function updateTemperature() {
+  console.log('Executed')
+  toast('Succesfully updated temperature', {
+    autoClose: 2000,
+  })
+}
 onMounted(async () => {
   try {
-    const dbValues = await getDataFromDB()
-    console.log(dbValues)
+    const userStore = useAppStore()
+    console.log(userStore.User)
     loading.value = true
-    const getToken = await createAccountToken('a0b5890d-06ae-43a5-84db-a337cdde35f9', '38d977b1-fb1a-4ae0-a06c-cb7c91edd28c')
+    const getToken = await createAccountToken(userStore.User.ClientID, userStore.User.ClientSecret)
     const accessToken = getToken.access_token
-    const deviceData = await getDeviceData('2960080965', accessToken)
+    const deviceData = await getDeviceData(userStore.User.SerialNumber, accessToken)
     currentTempt.value = deviceData.data.temp
     temp.value = deviceData.data.temp
     battery.value = deviceData.data.battery
@@ -143,6 +244,5 @@ onMounted(async () => {
   } catch (e) {
     console.log(e)
   }
-
 });
 </script>
