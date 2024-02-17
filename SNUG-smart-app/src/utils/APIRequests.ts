@@ -28,22 +28,22 @@ const dbURl = 'https://eu-central-1.aws.data.mongodb-api.com/app/data-fxwjv/endp
 const dbConnectionURl = 'http://localhost:5038/'
 
 export interface TimeSeries {
-    time: string; 
-    data: {
-      instant: {
-        details: {
-          air_temperature: number;
-          relative_humidity: number;
-        };
+  time: string;
+  data: {
+    instant: {
+      details: {
+        air_temperature: number;
+        relative_humidity: number;
       };
     };
-  }
+  };
+}
 export interface PowerPriceSeries {
-    NOK_per_kWh: number,
-    EUR_per_kWh: number,
-    EXR: number,
-    time_start: String,
-    time_end: String,
+  NOK_per_kWh: number,
+  EUR_per_kWh: number,
+  EXR: number,
+  time_start: String,
+  time_end: String,
 }
 export interface DataOnDevice {
   data: {
@@ -65,28 +65,28 @@ export interface DeviceInfo {
   id: string,
   deviceType: string,
   sensors: {
-      radonShortTermAvg: string,
-      temp: string,
-      humidity: string,
-      pressure: string,
-      co2: string,
-      voc: string,
-      pm1: string,
-      pm25: string,
-      staleAir: string,
-      transmissionEfficiency: string,
-      virusSurvivalRate: string,
-      virusRisk: string,
+    radonShortTermAvg: string,
+    temp: string,
+    humidity: string,
+    pressure: string,
+    co2: string,
+    voc: string,
+    pm1: string,
+    pm25: string,
+    staleAir: string,
+    transmissionEfficiency: string,
+    virusSurvivalRate: string,
+    virusRisk: string,
   },
   segment: {
-      id: string,
-      name: string,
-      started: string,
-      active: boolean,
+    id: string,
+    name: string,
+    started: string,
+    active: boolean,
   },
   location: {
-      id: string,
-      name: string,
+    id: string,
+    name: string,
   },
   productName: string,
 }
@@ -98,10 +98,10 @@ export interface LocationInfo {
     id: string,
     deviceType: string,
     segment: {
-        id: string,
-        name: string,
-        started: string,
-        active: boolean,
+      id: string,
+      name: string,
+      started: string,
+      active: boolean,
     },
     productName: string,
   },
@@ -135,7 +135,7 @@ export async function getWeatherForecastByArea(lat: number, lon: number): Promis
     return response.data;
   } catch (error) {
     console.error('Error fetching weather data:', error);
-    throw error; 
+    throw error;
   }
 }
 
@@ -145,16 +145,16 @@ export async function getCurrentPowerPrice(year: string, month: string, day: str
     return response.data;
   } catch (error) {
     console.error('Error fetching power price data:', error);
-    throw error; 
+    throw error;
   }
 }
 
 export async function createAccountToken(clientID: string, clientSecret: string) {
   const requestBody = {
-  grant_type: 'client_credentials',
-  client_id: clientID,
-  client_secret: clientSecret,
-  code: "auth-code-from-authorize"
+    grant_type: 'client_credentials',
+    client_id: clientID,
+    client_secret: clientSecret,
+    code: "auth-code-from-authorize"
   }
   try {
     const response = await accountAxiosInstance.post('', requestBody);
@@ -171,13 +171,13 @@ export async function getDeviceData(serialNumber: string, accessToken: string): 
       Authorization: `Bearer ${accessToken}`
     }
   });
-  
+
   try {
     const response = await deviceAxiosInstance.get(`${serialNumber}/latest-samples`);
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
-    throw error; 
+    throw error;
   }
 }
 export async function getDeviceInfo(serialNumber: string, accessToken: string): Promise<DeviceInfo> {
@@ -192,7 +192,7 @@ export async function getDeviceInfo(serialNumber: string, accessToken: string): 
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
-    throw error; 
+    throw error;
   }
 }
 export async function getLocationInfo(locationID: string, accessToken: string): Promise<LocationInfo> {
@@ -207,22 +207,21 @@ export async function getLocationInfo(locationID: string, accessToken: string): 
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
-    throw error; 
+    throw error;
   }
 }
-export async function getWeatherLinkData(stationId: string) {
-  const deviceAxiosInstance: AxiosInstance = axios.create({
-    baseURL: 'https://api.weatherlink.com/v2/',
-    headers: {
-      secret: `INSERT SECRET HERE`
-    }
-  });
+export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
   try {
-    const response = await deviceAxiosInstance.get(`${stationId}& INSERT APIKEY HERE`);
+    const response = await axios.get(`/api/current/${stationId}?api-key=${apikey}`, {
+      headers: {
+        'x-api-secret': apisecret
+      }
+    });
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
-    throw error; 
+    throw error;
   }
 }
 export async function createDbAccountToken() {
@@ -243,7 +242,7 @@ export async function getUserFromDB(userName: string, access_token: string) {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
     collection: "userdatacollection",
-    filter: {"username": userName}
+    filter: { "username": userName }
   };
 
   const headers = {
@@ -253,7 +252,6 @@ export async function getUserFromDB(userName: string, access_token: string) {
 
   try {
     const response = await axios.post(dbURl + '/action/findOne', data, { headers });
-    console.log(response.data)
     return response.data
   } catch (error) {
     console.error('Error:', error);
@@ -282,7 +280,30 @@ export async function getDeviceFromDB(userId: string, access_token: string) {
   }
 }
 
-export async function addUserToDB(accessToken: string, userName: string, passWord: string ) {
+export async function getWeatherStationFromDB(userId: string, access_token: string) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "weatherlinkcollection",
+    filter: {
+      userid: userId
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${access_token}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+export async function addUserToDB(accessToken: string, userName: string, passWord: string) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -305,7 +326,7 @@ export async function addUserToDB(accessToken: string, userName: string, passWor
     console.error('Error:', error);
   }
 }
-export async function addDeviceToDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat:number, lng: number ) {
+export async function addDeviceToDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -332,18 +353,45 @@ export async function addDeviceToDB(accessToken: string, userId: string, clientI
     console.error('Error:', error);
   }
 }
-export async function editDeviceInDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat:number, lng: number ) {
+export async function addWeatherStationToDB(accessToken: string, userId: string, stationId: string, apisecret: string, apikey: string) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "weatherlinkcollection",
+    document: {
+      userid: userId,
+      wlstationid: stationId,
+      wlapisecret: apisecret,
+      wlapikey: apikey,
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+export async function editDeviceInDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
     collection: "devicedatacollection",
-    filter: {userid: userId},
-    update: { $set: {clientid: clientId,
-      clientsecret: clientSecret,
-      serialnumber: serialNumber,
-      lat: lat,
-      lng: lng
-    }
+    filter: { userid: userId },
+    update: {
+      $set: {
+        clientid: clientId,
+        clientsecret: clientSecret,
+        serialnumber: serialNumber,
+        lat: lat,
+        lng: lng
+      }
     }
   };
 
@@ -364,11 +412,12 @@ export async function editUserInDB(accessToken: string, userId: string, userName
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
     collection: "devicedatacollection",
-    filter: {userid: userId},
-    update: { $set: {
-      username: userName,
-      userpw: userPw
-    }
+    filter: { userid: userId },
+    update: {
+      $set: {
+        username: userName,
+        userpw: userPw
+      }
     }
   };
 

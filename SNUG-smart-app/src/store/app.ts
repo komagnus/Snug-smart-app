@@ -15,7 +15,12 @@ export const useAppStore = defineStore('app', {
       },
       UserId: ref(''),
       UserName: ref(''),
-      SerialNumber: ref('')
+      SerialNumber: ref(''),
+      WeatherStation: {
+        Id: ref(''),
+        ApiKey: ref(''),
+        ApiSecret: ref('')
+      }
     }
   }),
 })
