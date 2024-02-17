@@ -19,9 +19,14 @@
           label="Clientsecret" placeholder="Enter your airthings account ClientSecret"></v-text-field>
         <v-text-field v-if="expandedForm" v-model="serialNumber" :readonly="loading" :rules="[required]" clearable
           label="Serialnumber" placeholder="Enter your airthings device SerialNumber"></v-text-field>
+        <v-btn v-if="expandedForm" @click="displayWlFields = true">Add weatherlink station?</v-btn>
+        <v-text-field v-if="displayWlFields" v-model="wlstation" placeholder="Weatherlink station ID"></v-text-field>
+        <v-text-field v-if="displayWlFields" v-model="wlapikey" placeholder="Weatherlink api key"></v-text-field>
+        <v-text-field v-if="displayWlFields" v-model="wlapisecret" placeholder="Weatherlink api secret"></v-text-field>
         <p v-if="incorrectLogin" style="color: red;">Incorrect email and/or password</p>
         <p v-else-if="missingDevice" style="color: red;">Incorrect email and/or password</p>
-        <p v-else-if="userExists" style="color: red;">A user with this email is already registered <span style="text-decoration: underline; cursor: pointer" @click="expandForm"> Sign in instead</span></p>
+        <p v-else-if="userExists" style="color: red;">A user with this email is already registered <span
+            style="text-decoration: underline; cursor: pointer" @click="expandForm"> Sign in instead</span></p>
         <br>
         <div v-if="!expandedForm">
           <p>First time? Sign up and register device <span style="text-decoration: underline; cursor: pointer;"
@@ -44,7 +49,7 @@
   
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { createDbAccountToken, getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo } from '@/utils/APIRequests'
+import { createDbAccountToken, getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB } from '@/utils/APIRequests'
 import { useAppStore } from '@/store/app'
 
 
@@ -70,6 +75,10 @@ const missingDevice = ref(false)
 const userExists = ref(false);
 const currentUser = userStore.User
 const loggedIn = ref(false)
+const displayWlFields = ref(false)
+const wlstation = ref('')
+const wlapikey = ref('')
+const wlapisecret = ref('')
 async function getUser() {
   try {
     loading.value = true;
@@ -88,6 +97,12 @@ async function getUser() {
         serialNumber.value = deviceData.document.serialnumber
         lat.value = deviceData.document.lat
         lng.value = deviceData.document.lng
+        const weatherStation = await getWeatherStationFromDB(id.value, accessToken)
+        if (weatherStation.document !== null) {
+          currentUser.WeatherStation.Id = weatherStation.document.wlstationid
+          currentUser.WeatherStation.ApiKey = weatherStation.document.wlapikey
+          currentUser.WeatherStation.ApiSecret = weatherStation.document.wlapisecret
+        }
         router.push('/mainContent')
       } else {
         incorrectLogin.value = true
@@ -95,7 +110,7 @@ async function getUser() {
     } else {
       incorrectLogin.value = true
     }
-    } catch (e) {
+  } catch (e) {
     console.log(e)
   } finally {
     currentUser.Name = name.value
@@ -134,6 +149,9 @@ async function addUser() {
         lat.value = locationInfo.lat
         lng.value = locationInfo.lng
       }
+      if (wlstation.value !== '') {
+        await addWeatherStationToDB(accessToken, userId.value, wlstation.value, wlapisecret.value, wlapikey.value)
+      }
       loggedIn.value = true
       await addDeviceToDB(accessToken, userId.value, clientid.value, clientsecret.value, serialNumber.value, lat.value, lng.value)
     }
@@ -149,9 +167,14 @@ async function addUser() {
     currentUser.SerialNumber = serialNumber.value
     currentUser.ClientLocation.Lat = lat.value
     currentUser.ClientLocation.Lng = lng.value
-    if(loggedIn.value) {
+    if (wlstation.value !== '') {
+      currentUser.WeatherStation.Id = wlstation.value
+      currentUser.WeatherStation.ApiKey = wlapikey.value
+      currentUser.WeatherStation.ApiSecret = wlapisecret.value
+    }
+    if (loggedIn.value) {
       router.push('/mainContent')
-    }    
+    }
     loading.value = false;
   }
 }

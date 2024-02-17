@@ -184,7 +184,6 @@ function updateTemperature() {
 onMounted(async () => {
   try {
     const userStore = useAppStore()
-    console.log(userStore.User)
     loading.value = true
     const getToken = await createAccountToken(userStore.User.ClientID, userStore.User.ClientSecret)
     const accessToken = getToken.access_token
