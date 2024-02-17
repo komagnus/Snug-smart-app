@@ -13,6 +13,7 @@
     <v-row style="font-size: 7vh; position: absolute;"> {{ formattedTemp + '°' }}</v-row>
     <v-slider 
     v-model="temp"
+    :on-update:model-value="console.log('test')"
     min="15"
     max="30"
     color="green"
@@ -24,18 +25,18 @@
         Desired indoor temperature
   </v-row>
   </v-card>
-  <v-dialog v-model="showMoreDeviceData" persistent width="50%">
+  <v-dialog v-model="showMoreDeviceData" persistent width="80%">
   <v-card
   style="width: 100% ;display: flex; justify-content: space-evenly; flex-direction: column; margin-top: 1%;"
   >
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: batteryColor}">
-        <v-row  :style="{fontSize: '5vh', position: 'absolute'}">{{ battery  }} <span style="font-size: 3vh; align-self: center;">%</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Battery Percentage</v-row> 
+        <v-row  :style="{fontSize: '5vh', position: 'absolute'}">{{ battery  }} <span style="font-size: 2vh; align-self: center;">%</span></v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Battery Percentage</v-row> 
       <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props"  >
+          <v-icon v-bind="props" size="x-small" >
             mdi-information-outline
               </v-icon>
         </template>
@@ -44,12 +45,12 @@
     </v-col>
       </v-card>
       <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: co2Color}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ co2 }} <span style="font-size: 3vh; align-self: center;">ppm</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 50%">Co2 Level</v-row>
+        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ co2 }} <span style="font-size: 2vh; align-self: center;">ppm</span></v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%">Co2 Level</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props"  >
+          <v-icon v-bind="props" size="x-small" >
             mdi-information-outline
               </v-icon>
         </template>
@@ -68,12 +69,12 @@
     </v-row>
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: humidityColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ humidity }}<span style="font-size: 3vh; align-self: center;">%</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Humidity</v-row>
+        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ humidity }}<span style="font-size: 2vh; align-self: center;">%</span></v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Humidity</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props"  >
+          <v-icon v-bind="props" size="x-small" >
             mdi-information-outline
               </v-icon>
         </template>
@@ -89,12 +90,12 @@
     </v-col>
       </v-card>
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: pmColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ pm }}<span style="font-size: 3vh; align-self: center;">µg/m3</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Particulate matter</v-row>
+        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ pm }}<span style="font-size: 2vh; align-self: center;">µg/m3</span></v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Particulate matter</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props"  >
+          <v-icon v-bind="props" size="x-small" >
             mdi-information-outline
               </v-icon>
         </template>
@@ -109,12 +110,12 @@
     </v-row>
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: radonValueColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ radonValue }}<span style="font-size: 3vh; align-self: center;"> Bq/m3</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Radon value</v-row>
+        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ radonValue }}<span style="font-size: 2vh; align-self: center;"> Bq/m3</span></v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Radon value</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props"  >
+          <v-icon v-bind="props" size="x-small" >
             mdi-information-outline
               </v-icon>
           </template>
@@ -129,12 +130,12 @@
         </v-col>
       </v-card>
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: vocColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ voc }}<span style="font-size: 3vh; align-self: center;">ppb</span>  </v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 45%;">Volatile organic compound</v-row>
+        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ voc }}<span style="font-size: 2vh; align-self: center;">ppb</span>  </v-row>
+        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Volatile organic compound</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
-          <v-icon v-bind="props" >
+          <v-icon v-bind="props" size="x-small">
             mdi-information-outline
               </v-icon>
         </template>

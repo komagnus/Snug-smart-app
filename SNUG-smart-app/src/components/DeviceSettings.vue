@@ -56,7 +56,7 @@
       hide-details
       style="width: 100%;">
       </v-text-field>
-      <v-btn style="margin: 2%;" @click="updateDevice">Edit device</v-btn>
+      <v-btn style="margin: 2%;" @click="updateDevice" :loading="loading">Edit device</v-btn>
     </v-card>
     <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" >
       <v-icon icon="mdi-database-edit-outline" size="large"></v-icon>
@@ -65,7 +65,8 @@
   </v-card>
 </template>
 <script setup lang="ts">
-import { addDeviceToDB, getLocationInfo, createAccountToken, getDeviceInfo, createDbAccountToken } from '@/utils/APIRequests';
+import { useAppStore } from '@/store/app';
+import { addDeviceToDB, getLocationInfo, createAccountToken, getDeviceInfo, createDbAccountToken, editDeviceInDB } from '@/utils/APIRequests';
 import { ref } from 'vue';
 const addNewDevice = ref(false)
 const editDevice = ref(false)
@@ -74,7 +75,9 @@ const clientSecret = ref('')
 const userId = ref('')
 const lat = ref(0)
 const lng = ref(0)
+const loading = ref(false)
 const serialNumber = ref('')
+const user = useAppStore().User
 function toggleAddNewDevice() {
   if(addNewDevice.value === false) {
     addNewDevice.value = true
@@ -91,6 +94,7 @@ function toggleEditDevice() {
 }
 async function addDevice(){
   try{
+    loading.value = true
     const token = await createAccountToken(clientID.value, clientSecret.value)
     const deviceInfo = await getDeviceInfo(serialNumber.value, token.access_token)
     const locationInfo = await getLocationInfo(deviceInfo.location.id, token.access_token)
@@ -101,10 +105,21 @@ async function addDevice(){
     await addDeviceToDB(accessToken, userId.value, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
   } catch(e) {
     console.log(e)
+  } finally {
+    loading.value = false
   }
 } 
 
 async function updateDevice () {
-  console.log('editja')
+  try {
+    loading.value = true
+    const token = await createAccountToken(clientID.value, clientSecret.value)
+    const accessToken = token.access_token
+    await editDeviceInDB(accessToken, user.UserId, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
+  } catch (e) {
+    console.log(e)
+  } finally {
+    loading.value = false
+  }
 }
 </script>
