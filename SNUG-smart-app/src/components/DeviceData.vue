@@ -13,7 +13,6 @@
     <v-row style="font-size: 7vh; position: absolute;"> {{ formattedTemp + '°' }}</v-row>
     <v-slider 
     v-model="temp"
-    :on-update:model-value="console.log('test')"
     min="15"
     max="30"
     color="green"
