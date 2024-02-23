@@ -4,9 +4,15 @@ import { ref } from 'vue'
 
 export const useValueStore = defineStore('values', {
   state: () => ({
-    batteryHigh: ref(70),
-    batteryLow: ref(30),
-    co2Warning: ref(800),
-    co2High: ref(1000)
+    BatteryHigh: ref(70),
+    BatteryLow: ref(30),
+    Co2Warning: ref(800),
+    Co2High: ref(1000)
+  }),
+})
+
+export const useLimitStore = defineStore('values', {
+  state: () => ({
+    PriceLimit: ref(70),
   }),
 })

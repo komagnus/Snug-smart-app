@@ -19,6 +19,8 @@
           label="Clientsecret" placeholder="Enter your airthings account ClientSecret"></v-text-field>
         <v-text-field v-if="expandedForm" v-model="serialNumber" :readonly="loading" :rules="[required]" clearable
           label="Serialnumber" placeholder="Enter your airthings device SerialNumber"></v-text-field>
+        <v-text-field type="number" v-if="expandedForm" v-model="priceLimit" :readonly="loading" :rules="[required]" clearable
+          label="Price limit" placeholder="Enter your desired pricelimit for electricity price"></v-text-field>
         <v-btn v-if="expandedForm" @click="displayWlFields = true">Add weatherlink station?</v-btn>
         <v-text-field v-if="displayWlFields" v-model="wlstation" placeholder="Weatherlink station ID"></v-text-field>
         <v-text-field v-if="displayWlFields" v-model="wlapikey" placeholder="Weatherlink api key"></v-text-field>
@@ -49,12 +51,13 @@
   
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { createDbAccountToken, getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB } from '@/utils/APIRequests'
+import { createDbAccountToken, getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB, getLimitsFromDB, addLimitsToDB } from '@/utils/APIRequests'
 import { useAppStore } from '@/store/app'
-
-
 import { ref } from 'vue';
-import { customRef } from 'vue';
+import { useLimitStore } from '@/store/valuestore';
+
+const userStore = useAppStore()
+const limitStore = useLimitStore();
 const router = useRouter();
 const username = ref('')
 const password = ref('')
@@ -67,18 +70,19 @@ const loading = ref(false)
 const expandedForm = ref(false)
 const skipCheck = ref(false)
 const userId = ref('')
-const userStore = useAppStore()
 const lat = ref(0)
 const lng = ref(0)
 const id = ref('')
 const missingDevice = ref(false)
 const userExists = ref(false);
 const currentUser = userStore.User
+const valueLimits = limitStore
 const loggedIn = ref(false)
 const displayWlFields = ref(false)
 const wlstation = ref('')
 const wlapikey = ref('')
 const wlapisecret = ref('')
+const priceLimit = ref(0)
 async function getUser() {
   try {
     loading.value = true;
@@ -103,6 +107,10 @@ async function getUser() {
           currentUser.WeatherStation.ApiKey = weatherStation.document.wlapikey
           currentUser.WeatherStation.ApiSecret = weatherStation.document.wlapisecret
         }
+        const userLimits = await getLimitsFromDB(id.value, accessToken)
+        if(userLimits.document !== null) {
+          priceLimit.value = userLimits.document.pricelimit
+        }
         router.push('/mainContent')
       } else {
         incorrectLogin.value = true
@@ -122,6 +130,7 @@ async function getUser() {
     currentUser.SerialNumber = serialNumber.value
     currentUser.ClientLocation.Lat = lat.value
     currentUser.ClientLocation.Lng = lng.value
+    valueLimits.PriceLimit = priceLimit.value
     if (loggedIn.value) {
       router.push('/mainContent')
     }
@@ -152,6 +161,7 @@ async function addUser() {
       if (wlstation.value !== '') {
         await addWeatherStationToDB(accessToken, userId.value, wlstation.value, wlapisecret.value, wlapikey.value)
       }
+      await addLimitsToDB(accessToken, userId.value, priceLimit.value)
       loggedIn.value = true
       await addDeviceToDB(accessToken, userId.value, clientid.value, clientsecret.value, serialNumber.value, lat.value, lng.value)
     }
@@ -172,6 +182,7 @@ async function addUser() {
       currentUser.WeatherStation.ApiKey = wlapikey.value
       currentUser.WeatherStation.ApiSecret = wlapisecret.value
     }
+    valueLimits.PriceLimit = priceLimit.value
     if (loggedIn.value) {
       router.push('/mainContent')
     }

@@ -8,7 +8,6 @@ import { LineChart } from 'vue-chart-3';
 import { Chart, registerables } from "chart.js";
 import { getCurrentPowerPrice, PowerPriceSeries } from '@/utils/APIRequests'
 import { currentTimeUTCOption2, tomorrowUTCTime } from '@/utils/globalUtils'
-import { ref } from 'vue';
 
 Chart.register(...registerables);
 export default defineComponent({

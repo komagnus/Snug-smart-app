@@ -4,19 +4,26 @@
             {{powerPrice }} 
         </v-row>
         <v-row v-else>loading...</v-row>
-
         <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
         Øre / kWh
         </v-row>
+        <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">
+          <v-icon size="x-small" >
+            mdi-information-outline
+          </v-icon>
+    </v-col>
+    <power-schedule :dialog-visible-prop="displaySchedule"/>
     </v-card>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getCurrentPowerPrice, PowerPriceSeries } from '@/utils/APIRequests'
 import { currentTimeUTCOption2 } from '@/utils/globalUtils'
+import PowerSchedule from './PowerSchedule.vue';
 const powerPrice = ref(0);
 const loading = ref(false);
 const fontColor = ref('black');
+const displaySchedule = ref(false)
 
 onMounted(async () => {
   try {
@@ -56,4 +63,12 @@ onMounted(async () => {
     loading.value = false
   }
 });
+function toggleDisplaySchedule () {
+  if(displaySchedule.value === true) {
+    displaySchedule.value = false
+  } else {
+    displaySchedule.value = true
+  }
+}
+
 </script>

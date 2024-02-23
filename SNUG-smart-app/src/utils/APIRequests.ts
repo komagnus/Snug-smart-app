@@ -24,6 +24,12 @@ const dbAccountAxiosInstance: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
+const weatherLinkAxiosInstance: AxiosInstance = axios.create({
+  baseURL: 'https://api.weatherlink.com/v2/',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 const dbURl = 'https://eu-central-1.aws.data.mongodb-api.com/app/data-fxwjv/endpoint/data/v1'
 const dbConnectionURl = 'http://localhost:5038/'
 
@@ -212,12 +218,7 @@ export async function getLocationInfo(locationID: string, accessToken: string): 
 }
 export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
   try {
-    const response = await axios.get(`/api/current/${stationId}?api-key=${apikey}`, {
-      headers: {
-        'x-api-secret': apisecret
-      }
-    });
-    console.log(response.data)
+    const response = await axios.get(`http://localhost:5000/weatherlink/${stationId}?apiKey=${apikey}&apiSecret=${apisecret}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
@@ -285,6 +286,29 @@ export async function getWeatherStationFromDB(userId: string, access_token: stri
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
     collection: "weatherlinkcollection",
+    filter: {
+      userid: userId
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${access_token}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+export async function getLimitsFromDB(userId: string, access_token: string) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "userlimitscollection",
     filter: {
       userid: userId
     }
@@ -378,6 +402,31 @@ export async function addWeatherStationToDB(accessToken: string, userId: string,
     console.error('Error:', error);
   }
 }
+
+export async function addLimitsToDB(accessToken: string, userId: string, pricelimit: number) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "weatherlinkcollection",
+    document: {
+      userid: userId,
+      pricelimit: pricelimit,
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
 export async function editDeviceInDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
   const data = {
     dataSource: "SnugSmartApp",
@@ -434,5 +483,30 @@ export async function editUserInDB(accessToken: string, userId: string, userName
   }
 }
 
+export async function editLimitsInDB(accessToken: string, userId: string, PriceLimit: number) {
+  const data = {
+    dataSource: "SnugSmartApp",
+    database: "snugsmartappeudb",
+    collection: "userlimitscollection",
+    filter: { userid: userId },
+    update: {
+      $set: {
+        pricelimit: PriceLimit,
+      }
+    }
+  };
+
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: 'application/json'
+  };
+
+  try {
+    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
 
