@@ -7,6 +7,11 @@
     <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
       Current outdoor temperature
     </v-row>
+    <v-col @click="toggleForecastDisplay" style="align-self: flex-end; cursor: pointer;">
+          <v-icon size="large" >
+            mdi-weather-cloudy-clock
+          </v-icon>
+    </v-col>
   </v-card>
   <v-card v-else style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
     <v-row v-if="!loading" :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
@@ -19,6 +24,7 @@
     <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
       Current outdoor temperature
     </v-row>
+    <weather-forecast :show-dialog-prop="displayForecast"/>
   </v-card>
 </template>
 <script setup lang="ts">
@@ -26,14 +32,13 @@ import { ref, onMounted, computed } from 'vue';
 import { getWeatherForecastByArea, TimeSeries, getWeatherLinkData } from '@/utils/APIRequests'
 import { currentTimeUTCOption1 } from '@/utils/globalUtils'
 import { useAppStore } from '@/store/app';
+import WeatherForecast from './WeatherForecast.vue'
 const weather = ref(0);
-const formattedWeather = computed(() => {
-    return ((weather.value - 32) * 5/9).toFixed(1);
-});
 const loading = ref(false)
 const fontColor = ref('black')
 const user = useAppStore().User
 const enableRetry = ref(false)
+const displayForecast = ref(false)
 
 onMounted(async () => {
   try {
@@ -108,6 +113,13 @@ async function retryWeatherData(){
     console.log(e)
   } finally {
     loading.value = false
+  }
+}
+function toggleForecastDisplay () {
+  if(displayForecast.value === true) {
+    displayForecast.value = false
+  } else {
+    displayForecast.value = true
   }
 }
 </script>

@@ -57,9 +57,9 @@ import { useLimitStore } from '@/store/valuestore';
   const user = useAppStore().User
   async function generateSchedule() {
     try{
-        const currentTimeInISOFormat = currentTimeUTCOption2;
-    const [datePart, timePart] = currentTimeInISOFormat.split('T');
-    const [year, month, day] = datePart.split('-');
+    const tomorrow = tomorrowUTCTime
+    const [tomorrowDatePart, tomorrowTimePart] = tomorrow.split('T');
+    const [year, month, day] = tomorrowDatePart.split('-');
     const priceArea = 'NO1';
     const powerData = await getCurrentPowerPrice(year, month, day, priceArea);
     const powerPriceValues: number[] = [];

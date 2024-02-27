@@ -8,7 +8,7 @@
         Øre / kWh
         </v-row>
         <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">
-          <v-icon size="x-small" >
+          <v-icon size="large" >
             mdi-information-outline
           </v-icon>
     </v-col>

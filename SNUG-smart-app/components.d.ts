@@ -19,6 +19,7 @@ declare module 'vue' {
     SnugRow: typeof import('./src/components/snugComponents/SnugRow.vue')['default']
     TemperatureSlider: typeof import('./src/components/TemperatureSlider.vue')['default']
     TopBar: typeof import('./src/components/TopBar.vue')['default']
+    WeatherForecast: typeof import('./src/components/WeatherForecast.vue')['default']
     WeatherWidget: typeof import('./src/components/WeatherWidget.vue')['default']
   }
 }

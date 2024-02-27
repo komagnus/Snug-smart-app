@@ -14,7 +14,7 @@ export function createSchedule(electricityPrices: number[],
     let off = false
     for (let i = 0; i < 24; i++) {
         if (electricityPrices[i] > thresholdPrice) {
-            if(off === false) {
+            if(off === true) {
                 continue
             } else {
                 off = true
