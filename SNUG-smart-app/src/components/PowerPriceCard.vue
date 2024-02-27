@@ -9,9 +9,9 @@
         </v-row>
         <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">
           <v-icon size="large" >
-            mdi-information-outline
+            mdi-home-clock-outline
           </v-icon>
-    </v-col>
+        </v-col>
     <power-schedule :dialog-visible-prop="displaySchedule"/>
     </v-card>
 </template>

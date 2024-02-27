@@ -74,11 +74,19 @@ export default defineComponent({
             grid: {
               display: false, 
             },
+            title: {
+            display: true,
+            text: 'Hour'
+          }
           },
           y: {
             grid: {
               display: false,
             },
+            title: {
+            display: true,
+            text: 'Price (NOK / kWh)'
+            }
           },
         },
       };

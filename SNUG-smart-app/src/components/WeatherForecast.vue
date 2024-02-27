@@ -1,7 +1,12 @@
 <template>
-    <v-dialog backgroundColor="white" width="80%" v-model="showDialog">
-    <v-card style="display: flex; align-items: center; width: 100%; height: 50vh;">
-        <iframe src="https://www.yr.no/nb/innhold/1-72837/card.html"></iframe>
+    <v-dialog backgroundColor="white" width="80%" persistent v-model="showDialog">
+    <v-card style="display: flex; align-items: center; width: 100%; height: 25vh;">
+    <v-col @click="showDialog = false" style="align-self: flex-end; cursor: pointer;">
+          <v-icon size="large" >
+            mdi-close
+          </v-icon>
+    </v-col>
+        <iframe :src="src" style="width: 100%; height: 100%; border: none;" ></iframe>
     </v-card>
     </v-dialog>
   </template>
@@ -17,27 +22,27 @@ const showDialog = ref(false)
 
 const weather = ref(0);
 const user = useAppStore().User
+const src = ref('')
 const emit = defineEmits();
 watch(() => props.showDialogProp, (newValue) => {
     showDialog.value = newValue;
 });
-/*onMounted(async () => {
+onMounted(async () => {
     try{
         const lat = user.ClientLocation.Lat;
-        const lon = user.ClientLocation.Lng;
-        const weatherData = await getWeatherForecastByArea(lat, lon);
+        const lng = user.ClientLocation.Lng;
+       src.value = 'https://www.yr.no/nb/innhold/' + lat + ',' + lng + '/card.html'
+        const weatherData = await getWeatherForecastByArea(lat, lng);
         const currentTimeUTC = currentTimeUTCOption1;
         const matchedTimeseries = weatherData.properties.timeseries.find(
         (timeseries: TimeSeries) => timeseries.time === currentTimeUTC
         );
         if (matchedTimeseries) {
             weather.value = matchedTimeseries.data.instant.details.air_temperature;
-            console.log(weather.value)
         }
         } catch (e) {
             console.log(e)
         }
     })
-    */
   </script>
   

@@ -4,11 +4,13 @@
     <v-row  style="font-size: 2vh; position: absolute; margin-top: 40%;">
         Current indoor temperature
     </v-row>
-    <v-row @click="showMoreDeviceData = true" style="cursor: pointer;font-size: 1vh; text-decoration: underline; position: absolute; margin-top: 60%;">
-      More about room climate
-    </v-row>
+    <v-col @click="toggleShowMoreDeviceData" style="align-self: flex-end; cursor: pointer;">
+          <v-icon size="large" >
+            mdi-home-clock-outline
+          </v-icon>
+    </v-col>
   </v-card>
-  <v-card
+  <v-card 
     :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%'}">
     <v-row style="font-size: 7vh; position: absolute;"> {{ formattedTemp + '°' }}</v-row>
     <v-slider 
@@ -17,7 +19,6 @@
     max="30"
     color="green"
     style="width: 60%; margin-top: 50%;"
-    @change="console.log('test')"
     >
     </v-slider>
   <v-row  style="font-size: 2vh; position: absolute; margin-top: 60%;">
@@ -28,6 +29,11 @@
   <v-card
   style="width: 100% ;display: flex; justify-content: space-evenly; flex-direction: column; margin-top: 1%;"
   >
+    <v-col @click="toggleShowMoreDeviceData" style="align-self: flex-end; cursor: pointer;">
+      <v-icon size="large" >
+          mdi-close
+      </v-icon>
+    </v-col>
     <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
       <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: batteryColor}">
         <v-row  :style="{fontSize: '5vh', position: 'absolute'}">{{ battery  }} <span style="font-size: 2vh; align-self: center;">%</span></v-row>
@@ -107,7 +113,7 @@
     </v-col>
       </v-card>
     </v-row>
-    <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
+    <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%; margin-bottom: 10%;">
       <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: radonValueColor}">
         <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ radonValue }}<span style="font-size: 2vh; align-self: center;"> Bq/m3</span></v-row>
         <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Radon value</v-row>
@@ -149,14 +155,13 @@
     </v-col>
       </v-card>
     </v-row>
-    <v-btn style="margin: 5%;" @click="showMoreDeviceData = false">Close</v-btn>
   </v-card>
 </v-dialog>
 </template>
 <script setup lang="ts">
 import { useAppStore } from '@/store/app';
 import { createAccountToken, getDeviceData } from '@/utils/APIRequests';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 
 const loading = ref(false)
 const temp = ref(0)
@@ -238,6 +243,18 @@ onMounted(async () => {
 
   } catch (e) {
     console.log(e)
+  }
+});
+function toggleShowMoreDeviceData () {
+  if(showMoreDeviceData.value === true) {
+    showMoreDeviceData.value = false
+  } else {
+    showMoreDeviceData.value = true
+  }
+}
+watch(() => temp, (newValue) => {
+  if(newValue.value = 21) {
+    updateTemperature()
   }
 });
 </script>

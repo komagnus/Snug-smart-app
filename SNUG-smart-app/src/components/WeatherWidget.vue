@@ -12,6 +12,7 @@
             mdi-weather-cloudy-clock
           </v-icon>
     </v-col>
+    <weather-forecast :show-dialog-prop="displayForecast"/>
   </v-card>
   <v-card v-else style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
     <v-row v-if="!loading" :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
@@ -24,7 +25,6 @@
     <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
       Current outdoor temperature
     </v-row>
-    <weather-forecast :show-dialog-prop="displayForecast"/>
   </v-card>
 </template>
 <script setup lang="ts">

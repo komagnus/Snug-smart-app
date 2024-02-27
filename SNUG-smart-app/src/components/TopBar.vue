@@ -16,11 +16,15 @@
     class="mx-auto pa-2"
     style="width: 100%;"
   >
+  <v-col @click="toggleShowSettings" style="align-self: flex-end; cursor: pointer;">
+      <v-icon size="large" >
+        mdi-close
+      </v-icon>
+  </v-col>
   <v-expansion-panels> 
     <account-settings />
     <device-settings />
   </v-expansion-panels>
-    <v-btn @click="toggleShowSettings">Close</v-btn>
   </v-card>
 </v-dialog>
   </v-row>
