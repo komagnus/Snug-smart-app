@@ -60,21 +60,21 @@ import { useLimitStore } from '@/store/valuestore';
   const user = useAppStore().User
   async function generateSchedule() {
     try{
-    const currentTimeInISOFormat = currentTimeUTCOption2;
-    const [datePart, timePart] = currentTimeInISOFormat.split('T');
-    const tomorrow = tomorrowUTCTime
-    const [tomorrowDatePart, tomorrowTimePart] = tomorrow.split('T');
-    const currentTime = new Date(Date.parse(currentTimeInISOFormat));
-    currentTime.setHours(currentTime.getHours() + 1);
-    const hours = currentTime.getHours();
-    const priceArea = 'NO1';
-    const powerPriceValues: number[] = [];
-    if(hours >= 13) {
-      const [year, month, day] = tomorrowDatePart.split('-');
-      const powerData = await getCurrentPowerPrice(year, month, day, priceArea);
-      powerData.forEach(entry => {
-        powerPriceValues.push(entry.NOK_per_kWh);
-      });
+      const currentTimeInISOFormat = currentTimeUTCOption2;
+      const [datePart, timePart] = currentTimeInISOFormat.split('T');
+      const tomorrow = tomorrowUTCTime
+      const [tomorrowDatePart, tomorrowTimePart] = tomorrow.split('T');
+      const currentTime = new Date(Date.parse(currentTimeInISOFormat));
+      currentTime.setHours(currentTime.getHours() + 1);
+      const hours = currentTime.getHours();
+      const priceArea = 'NO1';
+      const powerPriceValues: number[] = [];
+      if(hours >= 13) {
+        const [year, month, day] = tomorrowDatePart.split('-');
+        const powerData = await getCurrentPowerPrice(year, month, day, priceArea);
+        powerData.forEach(entry => {
+          powerPriceValues.push(entry.NOK_per_kWh);
+        });
       /*const lat = user.ClientLocation.Lat;
       const lon = user.ClientLocation.Lng;
       const weatherData = await getWeatherForecastByArea(lat, lon);
