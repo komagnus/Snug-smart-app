@@ -35,6 +35,7 @@ export default defineConfig({
       },
     }),
   ],
+  base: '/Snug-smart-app/' ,
   define: { 'process.env': {} },
   resolve: {
     alias: {
