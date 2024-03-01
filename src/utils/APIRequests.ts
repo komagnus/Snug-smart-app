@@ -216,16 +216,19 @@ export async function getLocationInfo(locationID: string, accessToken: string): 
     throw error;
   }
 }
-/*export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
+export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
   try {
-    const response = await axios.get(`http://localhost:5000/weatherlink/${stationId}?apiKey=${apikey}&apiSecret=${apisecret}`);
-    return response.data;
+    const response = await axios.get(`https://api.weatherlink.com/v2/current/${stationId}?api-key=${apikey}`, {
+      headers: {
+        'x-api-secret': apisecret
+      }
+    });    return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
     throw error;
   }
-}*/
-export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
+}
+/*export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
   try {
     const response = await axios.get(`/api/current/${stationId}?api-key=${apikey}`, {
       headers: {
@@ -237,7 +240,7 @@ export async function getWeatherLinkData(stationId: string, apisecret: string, a
     console.error('Error fetching device data:', error);
     throw error;
   }
-}
+}*/
 export async function createDbAccountToken() {
   const requestBody = {
     username: 'admin',
