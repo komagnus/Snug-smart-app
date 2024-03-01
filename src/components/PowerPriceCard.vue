@@ -1,10 +1,10 @@
 <template>
-    <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: space-evenly;">
-        <v-row v-if="!loading"  :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
+    <v-card class="cardComponentStyle">
+        <v-row v-if="!loading"  class="mainText" :style="{color: fontColor }">
             {{powerPrice }} 
         </v-row>
         <v-row v-else>loading...</v-row>
-        <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
+        <v-row class="subText" style="margin-top: 40%;">
         Øre / kWh
         </v-row>
         <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">

@@ -1,6 +1,6 @@
 <template>
     <v-dialog backgroundColor="white" width="80%" persistent v-model="showDialog">
-    <v-card style="display: flex; align-items: center; width: 100%; height: 25vh;">
+    <v-card style="display: flex; align-items: center; width: 100%; height: 40vh;">
     <v-col @click="showDialog = false" style="align-self: flex-end; cursor: pointer;">
           <v-icon size="large" >
             mdi-close

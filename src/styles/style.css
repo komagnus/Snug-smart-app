@@ -1,24 +1,145 @@
+
+@media (min-width: 750px) {
+    .mainText{
+        font-size: 7vh;
+        position: absolute;
+    }
+    .subText{
+        font-size: 2vh;
+        position: absolute;
+    }
+    .deviceDataMainText {
+        font-size: 5vh;
+        position: absolute;
+    }
+    .deviceDataSubTitle {
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .unitStyle {
+        font-size: 2vh;
+        align-self: center;
+    }
+    #chartStyle {
+        width: 90%;
+        height: 400px;
+    }
+}
+@media (min-width: 611px) and (max-width: 749px) {
+    .mainText{
+        font-size: 5vh;
+        position: absolute;
+    }
+    .subText{
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .deviceDataMainText {
+        font-size: 4vh;
+        position: absolute;
+    }
+    .deviceDataSubTitle {
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .unitStyle {
+        font-size: 1.5vh;
+        align-self: center;
+    }
+    #chartStyle {
+        width: 90%;
+    }
+}
+@media (min-width: 510px) and (max-width: 610px) {
+    .mainText{
+        font-size: 5vh;
+        position: absolute;
+    }
+    .subText{
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .deviceDataMainText {
+        font-size: 4vh;
+        position: absolute;
+    }
+    .deviceDataSubTitle {
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .unitStyle {
+        font-size: 1.5vh;
+        align-self: center;
+    }
+    #chartStyle {
+        width: 90%;
+        height: 350px;
+    }
+}
+@media (max-width: 509px) {
+    .mainText{
+        font-size: 4vh;
+        position: absolute;
+    }
+    .subText{
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .deviceDataMainText {
+        font-size: 4vh;
+        position: absolute;
+    }
+    .deviceDataSubTitle {
+        font-size: 1.5vh;
+        position: absolute;
+    }
+    .unitStyle {
+        font-size: 1.5vh;
+        align-self: center;
+    }
+    #chartStyle {
+        width: 80%;
+        height: 250px;
+    }
+}
+
 .cardComponentStyle {
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: center;
 }
+.cardStyle{
+    width: 40%;
+    height: 100%;
+    margin-bottom: 10%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+.deviceCardStyle {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 40%;
+}
 .rowStyle {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     height: 25vw;
-    margin-bottom: 10%;
 }
-.cardStyle{
-    width: 40%;
-    height: 100%;
+
+.deviceDataRowStyle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 20vw;
 }
-.valueFontSize{
-    font-size: 7vh;
-}
-.descStyle {
-    font-size: 2vh;
-    margin-bottom: 5%;
+#chartRowStyle {
+    display: flex;
+    justify-content: center;
 }

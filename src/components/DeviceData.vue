@@ -1,7 +1,7 @@
 <template>
-  <v-card style="display: flex; align-items: center; flex-direction: column; justify-content: space-evenly; width: 40%; height: 100%;">
-    <v-row style="font-size: 7vh; position: absolute;"> {{ currentTempt + '°' }}</v-row>
-    <v-row  style="font-size: 2vh; position: absolute; margin-top: 40%;">
+  <v-card class="cardStyle">
+    <v-row class="mainText"> {{ currentTempt + '°' }}</v-row>
+    <v-row  class="subText" style="margin-top: 40%;">
         Current indoor temperature
     </v-row>
     <v-col @click="toggleShowMoreDeviceData" style="align-self: flex-end; cursor: pointer;">
@@ -10,18 +10,17 @@
           </v-icon>
     </v-col>
   </v-card>
-  <v-card 
-    :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%'}">
-    <v-row style="font-size: 7vh; position: absolute;"> {{ formattedTemp + '°' }}</v-row>
+  <v-card class="cardStyle">
     <v-slider 
     v-model="temp"
     min="15"
     max="30"
     color="green"
-    style="width: 60%; margin-top: 50%;"
+    style="width: 60%;margin-bottom: 20%;"
     >
     </v-slider>
-  <v-row  style="font-size: 2vh; position: absolute; margin-top: 60%;">
+    <v-row class="mainText"> {{ formattedTemp + '°' }}</v-row>
+  <v-row   class="subText" style="margin-top: 40%;">
         Desired indoor temperature
   </v-row>
   </v-card>
@@ -34,10 +33,10 @@
           mdi-close
       </v-icon>
     </v-col>
-    <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
-      <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: batteryColor}">
-        <v-row  :style="{fontSize: '5vh', position: 'absolute'}">{{ battery  }} <span style="font-size: 2vh; align-self: center;">%</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Battery Percentage</v-row> 
+    <v-row class="deviceDataRowStyle" style=" margin-top: 10%;">
+      <v-card class="deviceCardStyle" :style="{backgroundColor: batteryColor}">
+        <v-row  class="deviceDataMainText">{{ battery  }} <span class="unitStyle">%</span></v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%;">Battery Percentage</v-row> 
       <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
@@ -49,9 +48,9 @@
       </v-tooltip>
     </v-col>
       </v-card>
-      <v-card :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: co2Color}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ co2 }} <span style="font-size: 2vh; align-self: center;">ppm</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%">Co2 Level</v-row>
+      <v-card class="deviceCardStyle" :style="{backgroundColor: co2Color}">
+        <v-row class="deviceDataMainText">{{ co2 }} <span class="unitStyle">ppm</span></v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%">Co2 Level</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
@@ -72,10 +71,10 @@
     </v-col>
       </v-card>
     </v-row>
-    <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%;">
-      <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: humidityColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ humidity }}<span style="font-size: 2vh; align-self: center;">%</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Humidity</v-row>
+    <v-row class="deviceDataRowStyle" style=" margin-top: 10%;">
+      <v-card  class="deviceCardStyle" :style="{backgroundColor: humidityColor}">
+        <v-row class="deviceDataMainText">{{ humidity }}<span class="unitStyle">%</span></v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%;">Humidity</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
@@ -94,9 +93,9 @@
       </v-tooltip>
     </v-col>
       </v-card>
-      <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: pmColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ pm }}<span style="font-size: 2vh; align-self: center;">µg/m3</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Particulate matter</v-row>
+      <v-card  class="deviceCardStyle" :style="{backgroundColor: pmColor}">
+        <v-row class="deviceDataMainText">{{ pm }}<span class="unitStyle">µg/m3</span></v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%;">Particulate matter</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
@@ -113,10 +112,10 @@
     </v-col>
       </v-card>
     </v-row>
-    <v-row style="display: flex; flex-direction: row; justify-content: space-evenly; height: 20vw; margin-top: 10%; margin-bottom: 10%;">
-      <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: radonValueColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ radonValue }}<span style="font-size: 2vh; align-self: center;"> Bq/m3</span></v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Radon value</v-row>
+    <v-row class="deviceDataRowStyle" style="margin-top: 10%; margin-bottom: 10%;">
+      <v-card  class="deviceCardStyle" :style="{backgroundColor: radonValueColor}">
+        <v-row class="deviceDataMainText">{{ radonValue }}<span class="unitStyle"> Bq/m3</span></v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%;">Radon value</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">
@@ -134,9 +133,9 @@
           </v-tooltip>
         </v-col>
       </v-card>
-      <v-card  :style="{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', width: '40%', height: '100%',  backgroundColor: vocColor}">
-        <v-row :style="{fontSize: '5vh', position: 'absolute'}">{{ voc }}<span style="font-size: 2vh; align-self: center;">ppb</span>  </v-row>
-        <v-row style="font-size: 1.5vh; position: absolute; margin-top: 35%;">Volatile organic compound</v-row>
+      <v-card  class="deviceCardStyle" :style="{backgroundColor: vocColor}">
+        <v-row class="deviceDataMainText">{{ voc }}<span class="unitStyle">ppb</span>  </v-row>
+        <v-row class="deviceDataSubTitle" style=" margin-top: 35%;">VOC</v-row>
         <v-col style="align-self: flex-end;">
         <v-tooltip location="bottom"  >
         <template v-slot:activator="{ props }">

@@ -1,10 +1,10 @@
 <template>
-  <v-card v-if="!enableRetry" style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
-    <v-row v-if="!loading" :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
+  <v-card v-if="!enableRetry" class="cardComponentStyle">
+    <v-row v-if="!loading" class="mainText" :style="{color: fontColor }">
       {{ weather + '°' }}
     </v-row>
     <v-row v-else style="position: absolute">loading...</v-row>
-    <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
+    <v-row class="subText" style="margin-top: 40%;">
       Current outdoor temperature
     </v-row>
     <v-col @click="toggleForecastDisplay" style="align-self: flex-end; cursor: pointer;">
@@ -14,15 +14,15 @@
     </v-col>
     <weather-forecast :show-dialog-prop="displayForecast"/>
   </v-card>
-  <v-card v-else style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
-    <v-row v-if="!loading" :style="{ fontSize: '7vh', position: 'absolute', color: fontColor }">
+  <v-card v-else class="cardComponentStyle">
+    <v-row v-if="!loading" class="mainText" :style="{color: fontColor }">
       <v-icon style="cursor:pointer"
         size="large" 
         icon="mdi-refresh"
         @click="retryWeatherData"></v-icon>
     </v-row>
     <v-row v-else>loading...</v-row>
-    <v-row style="font-size: 2vh; position: absolute; margin-top: 40%;">
+    <v-row class="subText" style="margin-top: 40%;">
       Current outdoor temperature
     </v-row>
     <v-col @click="toggleForecastDisplay" style="align-self: flex-end; cursor: pointer;">
@@ -39,6 +39,7 @@ import { getWeatherForecastByArea, TimeSeries, getWeatherLinkData } from '@/util
 import { currentTimeUTCOption1 } from '@/utils/globalUtils'
 import { useAppStore } from '@/store/app';
 import WeatherForecast from './WeatherForecast.vue'
+
 const weather = ref(0);
 const loading = ref(false)
 const fontColor = ref('black')
