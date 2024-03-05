@@ -39,13 +39,14 @@
     </v-dialog>
   </template>
   
-  <script setup lang="ts">
-  import { ScheduleSetting, createSchedule } from '@/utils/algorithm';
-  import { ref, defineProps, defineEmits, watch } from 'vue';
-  import { getCurrentPowerPrice, getWeatherForecastByArea, PowerPriceSeries } from '@/utils/APIRequests'
+<script setup lang="ts">
+import { ScheduleSetting, createSchedule } from '@/utils/algorithm';
+import { ref, defineProps, defineEmits, watch } from 'vue';
+import { getCurrentPowerPrice, getWeatherForecastByArea, PowerPriceSeries } from '@/utils/APIRequests'
 import { currentTimeUTCOption2, tomorrowUTCTime } from '@/utils/globalUtils'
 import { useAppStore } from '@/store/app';
 import { useLimitStore } from '@/store/valuestore';
+
   const dialogVisible = ref(false)
   const props = defineProps({
     dialogVisibleProp: Boolean 

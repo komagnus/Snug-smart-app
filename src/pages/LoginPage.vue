@@ -20,7 +20,7 @@
         <v-text-field v-if="expandedForm" v-model="serialNumber" :readonly="loading" :rules="[required]" clearable
           label="Serialnumber" placeholder="Enter your airthings device SerialNumber"></v-text-field>
         <v-text-field type="number" v-if="expandedForm" v-model="priceLimit" :readonly="loading" :rules="[required]" clearable
-          label="Price limit" placeholder="Enter your desired pricelimit for electricity price"></v-text-field>
+          label="Price limit in NOK Øre" placeholder="Enter your desired pricelimit for electricity price"></v-text-field>
         <v-btn v-if="expandedForm" @click="displayWlFields = true">Add weatherlink station?</v-btn>
         <v-text-field v-if="displayWlFields" v-model="wlstation" placeholder="Weatherlink station ID"></v-text-field>
         <v-text-field v-if="displayWlFields" v-model="wlapikey" placeholder="Weatherlink api key"></v-text-field>
@@ -51,7 +51,7 @@
   
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { createDbAccountToken, getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB, getLimitsFromDB, addLimitsToDB } from '@/utils/APIRequests'
+import { getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB, getLimitsFromDB, addLimitsToDB } from '@/utils/APIRequests'
 import { useAppStore } from '@/store/app'
 import { ref } from 'vue';
 import { useLimitStore } from '@/store/valuestore';
@@ -86,28 +86,27 @@ const priceLimit = ref(0)
 async function getUser() {
   try {
     loading.value = true;
-    const getToken = await createDbAccountToken()
-    const accessToken = getToken.access_token
-    const checkUser = await getUserFromDB(username.value, accessToken)
-    if (checkUser.document !== null) {
-      if (checkUser.document.username === username.value && checkUser.document.userpw === password.value) {
-        const deviceData = await getDeviceFromDB(checkUser.document._id, accessToken)
-        id.value = checkUser._id
-        name.value = checkUser.name
-        username.value = checkUser.username
+    const checkUser = await getUserFromDB(username.value)
+    const user = checkUser.document
+    if (user !== null) {
+      if (user.username === username.value && user.userpw === password.value) {
+        id.value = user._id
+        const deviceData = await getDeviceFromDB(id.value)
+        name.value = user.name
+        username.value = user.username
         loggedIn.value = true
         clientid.value = deviceData.document.clientid
         clientsecret.value = deviceData.document.clientsecret
         serialNumber.value = deviceData.document.serialnumber
         lat.value = deviceData.document.lat
         lng.value = deviceData.document.lng
-        const weatherStation = await getWeatherStationFromDB(id.value, accessToken)
+        const weatherStation = await getWeatherStationFromDB(id.value)
         if (weatherStation.document !== null) {
           currentUser.WeatherStation.Id = weatherStation.document.wlstationid
           currentUser.WeatherStation.ApiKey = weatherStation.document.wlapikey
           currentUser.WeatherStation.ApiSecret = weatherStation.document.wlapisecret
         }
-        const userLimits = await getLimitsFromDB(id.value, accessToken)
+        const userLimits = await getLimitsFromDB(id.value)
         if(userLimits.document !== null) {
           priceLimit.value = userLimits.document.pricelimit
         }
@@ -141,15 +140,12 @@ async function addUser() {
   try {
     userExists.value = false;
     loading.value = true;
-    const getToken = await createDbAccountToken()
-    const accessToken = getToken.access_token
-    const checkUser = await getUserFromDB(username.value, accessToken)
-    console.log(checkUser.document)
+    const checkUser = await getUserFromDB(username.value)
     if (checkUser.document !== null) {
       userExists.value = true
       return
     } else {
-      const userAdd = await addUserToDB(accessToken, username.value, password.value)
+      const userAdd = await addUserToDB(username.value, password.value)
       userId.value = userAdd.insertedId
       if (!skipCheck.value) {
         const token = await createAccountToken(clientid.value, clientsecret.value)
@@ -159,11 +155,11 @@ async function addUser() {
         lng.value = locationInfo.lng
       }
       if (wlstation.value !== '') {
-        await addWeatherStationToDB(accessToken, userId.value, wlstation.value, wlapisecret.value, wlapikey.value)
+        await addWeatherStationToDB(userId.value, wlstation.value, wlapisecret.value, wlapikey.value)
       }
-      await addLimitsToDB(accessToken, userId.value, priceLimit.value)
+      await addLimitsToDB(userId.value, priceLimit.value)
       loggedIn.value = true
-      await addDeviceToDB(accessToken, userId.value, clientid.value, clientsecret.value, serialNumber.value, lat.value, lng.value)
+      await addDeviceToDB(userId.value, clientid.value, clientsecret.value, serialNumber.value, lat.value, lng.value)
     }
   } catch (e) {
     console.log(e)
@@ -183,7 +179,7 @@ async function addUser() {
       currentUser.WeatherStation.ApiSecret = wlapisecret.value
     }
     valueLimits.PriceLimit = priceLimit.value
-    if (loggedIn.value) {
+    if (currentUser.IsLoggedIn) {
       router.push('/mainContent')
     }
     loading.value = false;

@@ -50,11 +50,11 @@ const displayForecast = ref(false)
 onMounted(async () => {
   try {
     loading.value = true
-    /*if (user.WeatherStation.Id !== '') {
+    if (user.WeatherStation.Id !== '') {
       const weatherData = await getWeatherLinkData(user.WeatherStation.Id, user.WeatherStation.ApiSecret, user.WeatherStation.ApiKey)
       weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5/9).toFixed(1);
       enableRetry.value = false
-    } else {*/
+    } else {
       const lat = user.ClientLocation.Lat;
       const lon = user.ClientLocation.Lng;
       const weatherData = await getWeatherForecastByArea(lat, lon);
@@ -67,7 +67,7 @@ onMounted(async () => {
         enableRetry.value = false
       }
       
-    //}
+    }
       if (weather.value < 0) {
         fontColor.value = 'blue'
       } else if (weather.value <= 10) {
@@ -91,6 +91,7 @@ async function retryWeatherData(){
     loading.value = true
     if (user.WeatherStation.Id !== '') {
       const weatherData = await getWeatherLinkData(user.WeatherStation.Id, user.WeatherStation.ApiSecret, user.WeatherStation.ApiKey)
+      console.log(weatherData)
       weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5/9).toFixed(1);
       enableRetry.value = false
     } else {

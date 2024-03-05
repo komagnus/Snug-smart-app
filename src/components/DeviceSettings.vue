@@ -2,7 +2,7 @@
     <v-card
     title="Device settings"
     style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleAddNewDevice">
+    <v-btn :disabled="true" style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleAddNewDevice">
       <v-icon icon="mdi-server-plus" size="large"></v-icon>
       <div>Add Device</div>
     </v-btn>
@@ -30,7 +30,7 @@
       </v-text-field>
       <v-btn style="margin: 2%;" @click="addDevice">Add device</v-btn>
     </v-card>
-    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditDevice" >
+    <v-btn :disabled="true" style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditDevice" >
       <v-icon icon="mdi-access-point-network" size="large"></v-icon>
       <div>Edit Device</div>
     </v-btn>
@@ -58,7 +58,7 @@
       </v-text-field>
       <v-btn style="margin: 2%;" @click="updateDevice" :loading="loading">Edit device</v-btn>
     </v-card>
-    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditValues" >
+    <v-btn :disabled="true" style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditValues" >
       <v-icon icon="mdi-database-edit-outline" size="large"></v-icon>
       <div>Edit desired values</div>
     </v-btn>
@@ -78,7 +78,7 @@
 <script setup lang="ts">
 import { useAppStore } from '@/store/app';
 import { useLimitStore } from '@/store/valuestore';
-import { addDeviceToDB, getLocationInfo, createAccountToken, getDeviceInfo, createDbAccountToken, editDeviceInDB, editLimitsInDB } from '@/utils/APIRequests';
+import { addDeviceToDB, getLocationInfo, createAccountToken, getDeviceInfo, editDeviceInDB, editLimitsInDB } from '@/utils/APIRequests';
 import { ref } from 'vue';
 const addNewDevice = ref(false)
 const editDevice = ref(false)
@@ -122,9 +122,7 @@ async function addDevice(){
     const locationInfo = await getLocationInfo(deviceInfo.location.id, token.access_token)
     lat.value = locationInfo.lat
     lng.value = locationInfo.lng
-    const getToken = await createDbAccountToken()
-    const accessToken = getToken.access_token
-    await addDeviceToDB(accessToken, userId.value, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
+    await addDeviceToDB(userId.value, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
   } catch(e) {
     console.log(e)
   } finally {
@@ -135,9 +133,7 @@ async function addDevice(){
 async function updateDevice () {
   try {
     loading.value = true
-    const token = await createAccountToken(clientID.value, clientSecret.value)
-    const accessToken = token.access_token
-    await editDeviceInDB(accessToken, user.UserId, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
+    await editDeviceInDB( user.UserId, clientID.value, clientSecret.value, serialNumber.value, lat.value, lng.value)
   } catch (e) {
     console.log(e)
   } finally {
@@ -149,9 +145,7 @@ async function updateValueLimits () {
     loading.value = true
     clientID.value = user.ClientID
     clientSecret.value = user.ClientSecret
-    const token = await createAccountToken(clientID.value, clientSecret.value)
-    const accessToken = token.access_token
-    await editLimitsInDB(accessToken, user.UserId, pricelimit.value)
+    await editLimitsInDB(user.UserId, pricelimit.value)
   } catch (e) {
     console.log(e)
   } finally {

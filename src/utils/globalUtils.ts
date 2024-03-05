@@ -1,5 +1,4 @@
 import { ref } from "vue";
-
 function getCurrentUTCTimeRounded(): Date {
     const currentTime = new Date(Date.now());
     currentTime.setUTCMinutes(0);

@@ -30,8 +30,7 @@ const weatherLinkAxiosInstance: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-const dbURl = 'https://eu-central-1.aws.data.mongodb-api.com/app/data-fxwjv/endpoint/data/v1'
-const dbConnectionURl = 'http://localhost:5038/'
+const dbURl = 'https://snug-smart-app-backend.onrender.com'
 
 export interface TimeSeries {
   time: string;
@@ -216,131 +215,54 @@ export async function getLocationInfo(locationID: string, accessToken: string): 
     throw error;
   }
 }
-/*export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
-  try {
-    const response = await axios.get(`http://localhost:5000/weatherlink/${stationId}?apiKey=${apikey}&apiSecret=${apisecret}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching device data:', error);
-    throw error;
-  }
-}*/
 export async function getWeatherLinkData(stationId: string, apisecret: string, apikey: string) {
   try {
-    const response = await axios.get(`/api/current/${stationId}?api-key=${apikey}`, {
-      headers: {
-        'x-api-secret': apisecret
-      }
-    });
+    const response = await axios.get(`https://snug-smart-app-backend.onrender.com/weatherlink/${stationId}?apiKey=${apikey}&apiSecret=${apisecret}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching device data:', error);
     throw error;
   }
 }
-export async function createDbAccountToken() {
-  const requestBody = {
-    username: 'admin',
-    password: 'qo4atxzj3i3AMQQU'
-  }
+export async function getUserFromDB(userName: string) {
   try {
-    const response = await dbAccountAxiosInstance.post('', requestBody);
+    const response = await axios.get(dbURl + '/getUser/' + userName);
+    return response.data
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+export async function getDeviceFromDB(userId: string) {
+  const collection = "devicedatacollection"
+  try {
+    const response = await axios.get(dbURl + '/getInfo/' + userId + '?collection=' + collection);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function getUserFromDB(userName: string, access_token: string) {
-  const data = {
-    dataSource: "SnugSmartApp",
-    database: "snugsmartappeudb",
-    collection: "userdatacollection",
-    filter: { "username": userName }
-  };
-
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-    Accept: 'application/json'
-  }
-
-  try {
-    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
-    return response.data
-  } catch (error) {
+export async function getWeatherStationFromDB(userId: string) {
+    const collection = "weatherlinkcollection"
+    try {
+      const response = await axios.get(dbURl + '/getInfo/' + userId + '?collection=' + collection);
+      return response.data
+    }catch (error) {
     console.error('Error:', error);
   }
 }
-export async function getDeviceFromDB(userId: string, access_token: string) {
-  const data = {
-    dataSource: "SnugSmartApp",
-    database: "snugsmartappeudb",
-    collection: "devicedatacollection",
-    filter: {
-      userid: userId
-    }
-  };
 
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-    Accept: 'application/json'
-  };
-
+export async function getLimitsFromDB(userId: string) {
+  const collection = "userlimitscollection"
   try {
-    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
+    const response = await axios.get(dbURl + '/getInfo/' + userId + '?collection=' + collection);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function getWeatherStationFromDB(userId: string, access_token: string) {
-  const data = {
-    dataSource: "SnugSmartApp",
-    database: "snugsmartappeudb",
-    collection: "weatherlinkcollection",
-    filter: {
-      userid: userId
-    }
-  };
-
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-    Accept: 'application/json'
-  };
-
-  try {
-    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
-    return response.data
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-export async function getLimitsFromDB(userId: string, access_token: string) {
-  const data = {
-    dataSource: "SnugSmartApp",
-    database: "snugsmartappeudb",
-    collection: "userlimitscollection",
-    filter: {
-      userid: userId
-    }
-  };
-
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-    Accept: 'application/json'
-  };
-
-  try {
-    const response = await axios.post(dbURl + '/action/findOne', data, { headers });
-    return response.data
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-export async function addUserToDB(accessToken: string, userName: string, passWord: string) {
+export async function addUserToDB(userName: string, passWord: string) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -350,20 +272,15 @@ export async function addUserToDB(accessToken: string, userName: string, passWor
       userpw: passWord
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
-export async function addDeviceToDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
+
+export async function addDeviceToDB(userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -377,20 +294,15 @@ export async function addDeviceToDB(accessToken: string, userId: string, clientI
       lng: lng
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
-export async function addWeatherStationToDB(accessToken: string, userId: string, stationId: string, apisecret: string, apikey: string) {
+
+export async function addWeatherStationToDB(userId: string, stationId: string, apisecret: string, apikey: string) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -402,21 +314,15 @@ export async function addWeatherStationToDB(accessToken: string, userId: string,
       wlapikey: apikey,
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function addLimitsToDB(accessToken: string, userId: string, pricelimit: number) {
+export async function addLimitsToDB(userId: string, pricelimit: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -426,21 +332,15 @@ export async function addLimitsToDB(accessToken: string, userId: string, priceli
       pricelimit: pricelimit,
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function editDeviceInDB(accessToken: string, userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
+export async function editDeviceInDB(userId: string, clientId: string, clientSecret: string, serialNumber: string, lat: number, lng: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -456,20 +356,14 @@ export async function editDeviceInDB(accessToken: string, userId: string, client
       }
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
-export async function editUserInDB(accessToken: string, userId: string, userName: string, userPw: string) {
+export async function editUserInDB(userId: string, userName: string, userPw: string) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -482,21 +376,15 @@ export async function editUserInDB(accessToken: string, userId: string, userName
       }
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function editLimitsInDB(accessToken: string, userId: string, PriceLimit: number) {
+export async function editLimitsInDB(userId: string, PriceLimit: number) {
   const data = {
     dataSource: "SnugSmartApp",
     database: "snugsmartappeudb",
@@ -508,14 +396,8 @@ export async function editLimitsInDB(accessToken: string, userId: string, PriceL
       }
     }
   };
-
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    Accept: 'application/json'
-  };
-
   try {
-    const response = await axios.post(dbURl + '/action/insertOne', data, { headers });
+    const response = await axios.post(dbURl + '/addDocument', data);
     return response.data
   } catch (error) {
     console.error('Error:', error);

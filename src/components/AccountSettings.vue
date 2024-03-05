@@ -2,7 +2,7 @@
     <v-card
     title="Account Settings"
     style="display: flex; flex-direction: column; align-items: center; width: 100%;">
-    <v-btn style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditAccount" >
+    <v-btn :disabled="true" style="display: flex; justify-content: space-evenly; width: 80%; margin: 1%;" @click="toggleEditAccount" >
       <v-icon icon="mdi-account" size="large"></v-icon>
       <div>Edit Account</div>
     </v-btn>
@@ -39,7 +39,7 @@
 </template>
 <script setup lang="ts">
 import router from '@/router';
-import { createDbAccountToken, editUserInDB, getUserFromDB} from '@/utils/APIRequests'
+import { editUserInDB, getUserFromDB} from '@/utils/APIRequests'
 import { useAppStore } from '@/store/app';
 import { ref } from 'vue'
 const userStore = useAppStore()
@@ -63,11 +63,9 @@ function signOut() {
 
 async function editAccount () {
   try {
-    const getToken = await createDbAccountToken()
-    const accessToken = getToken.access_token
-    const checkUser = await getUserFromDB(userStore.User.UserName, accessToken)
+    const checkUser = await getUserFromDB(userStore.User.UserName)
     if(checkUser.document.userpw === oldPw.value) {
-      await editUserInDB(accessToken, userId, username.value, newPw.value)
+      await editUserInDB(userId, username.value, newPw.value)
       userStore.User.UserName = username.value
     } else {
       wrongOldPw.value = true
