@@ -1,6 +1,6 @@
 <template>
   <v-card v-if="!enableRetry" class="cardComponentStyle">
-    <v-row v-if="!loading" class="mainText" :style="{color: fontColor }">
+    <v-row v-if="!loading" class="mainText" :style="{ color: fontColor }">
       {{ weather + '°' }}
     </v-row>
     <v-row v-else style="position: absolute">loading...</v-row>
@@ -8,29 +8,26 @@
       Current outdoor temperature
     </v-row>
     <v-col @click="toggleForecastDisplay" style="align-self: flex-end; cursor: pointer;">
-          <v-icon size="large" >
-            mdi-weather-cloudy-clock
-          </v-icon>
+      <v-icon size="large">
+        mdi-weather-cloudy-clock
+      </v-icon>
     </v-col>
-    <weather-forecast :show-dialog-prop="displayForecast"/>
+    <weather-forecast :show-dialog-prop="displayForecast" />
   </v-card>
   <v-card v-else class="cardComponentStyle">
-    <v-row v-if="!loading" class="mainText" :style="{color: fontColor }">
-      <v-icon style="cursor:pointer"
-        size="large" 
-        icon="mdi-refresh"
-        @click="retryWeatherData"></v-icon>
+    <v-row v-if="!loading" class="mainText" :style="{ color: fontColor }">
+      <v-icon style="cursor:pointer" size="large" icon="mdi-refresh" @click="retryWeatherData"></v-icon>
     </v-row>
     <v-row v-else>loading...</v-row>
     <v-row class="subText" style="margin-top: 40%;">
       Current outdoor temperature
     </v-row>
     <v-col @click="toggleForecastDisplay" style="align-self: flex-end; cursor: pointer;">
-          <v-icon size="large" >
-            mdi-weather-cloudy-clock
-          </v-icon>
+      <v-icon size="large">
+        mdi-weather-cloudy-clock
+      </v-icon>
     </v-col>
-    <weather-forecast :show-dialog-prop="displayForecast"/>
+    <weather-forecast :show-dialog-prop="displayForecast" />
   </v-card>
 </template>
 <script setup lang="ts">
@@ -52,7 +49,7 @@ onMounted(async () => {
     loading.value = true
     if (user.WeatherStation.Id !== '') {
       const weatherData = await getWeatherLinkData(user.WeatherStation.Id, user.WeatherStation.ApiSecret, user.WeatherStation.ApiKey)
-      weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5/9).toFixed(1);
+      weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5 / 9).toFixed(1);
       enableRetry.value = false
     } else {
       const lat = user.ClientLocation.Lat;
@@ -66,16 +63,16 @@ onMounted(async () => {
         weather.value = matchedTimeseries.data.instant.details.air_temperature;
         enableRetry.value = false
       }
-      
+
     }
-      if (weather.value < 0) {
-        fontColor.value = 'blue'
-      } else if (weather.value <= 10) {
-        fontColor.value = 'lightblue'
-      } else {
-        fontColor.value = 'red'
-      }
-   
+    if (weather.value < 0) {
+      fontColor.value = 'blue'
+    } else if (weather.value <= 10) {
+      fontColor.value = 'lightblue'
+    } else {
+      fontColor.value = 'red'
+    }
+
 
 
   } catch (error) {
@@ -86,13 +83,13 @@ onMounted(async () => {
   }
 
 });
-async function retryWeatherData(){
+async function retryWeatherData() {
   try {
     loading.value = true
     if (user.WeatherStation.Id !== '') {
       const weatherData = await getWeatherLinkData(user.WeatherStation.Id, user.WeatherStation.ApiSecret, user.WeatherStation.ApiKey)
       console.log(weatherData)
-      weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5/9).toFixed(1);
+      weather.value = ((weatherData.sensors[0].data[0].temp_out - 32) * 5 / 9).toFixed(1);
       enableRetry.value = false
     } else {
       const lat = user.ClientLocation.Lat;
@@ -106,15 +103,15 @@ async function retryWeatherData(){
         weather.value = matchedTimeseries.data.instant.details.air_temperature;
         enableRetry.value = false
       }
-      
+
     }
-      if (weather.value < 0) {
-        fontColor.value = 'blue'
-      } else if (weather.value <= 10) {
-        fontColor.value = 'lightblue'
-      } else {
-        fontColor.value = 'red'
-      }
+    if (weather.value < 0) {
+      fontColor.value = 'blue'
+    } else if (weather.value <= 10) {
+      fontColor.value = 'lightblue'
+    } else {
+      fontColor.value = 'red'
+    }
 
 
   } catch (e) {
@@ -123,8 +120,8 @@ async function retryWeatherData(){
     loading.value = false
   }
 }
-function toggleForecastDisplay () {
-  if(displayForecast.value === true) {
+function toggleForecastDisplay() {
+  if (displayForecast.value === true) {
     displayForecast.value = false
   } else {
     displayForecast.value = true

@@ -1,19 +1,19 @@
 <template>
-    <v-card class="cardComponentStyle">
-        <v-row v-if="!loading"  class="mainText" :style="{color: fontColor }">
-            {{powerPrice }} 
-        </v-row>
-        <v-row v-else>loading...</v-row>
-        <v-row class="subText" style="margin-top: 40%;">
-        Øre / kWh
-        </v-row>
-        <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">
-          <v-icon size="large" >
-            mdi-home-clock-outline
-          </v-icon>
-        </v-col>
-    <power-schedule :dialog-visible-prop="displaySchedule"/>
-    </v-card>
+  <v-card class="cardComponentStyle">
+    <v-row v-if="!loading" class="mainText" :style="{ color: fontColor }">
+      {{ powerPrice }}
+    </v-row>
+    <v-row v-else>loading...</v-row>
+    <v-row class="subText" style="margin-top: 40%;">
+      Øre / kWh
+    </v-row>
+    <v-col @click="toggleDisplaySchedule" style="align-self: flex-end; cursor: pointer;">
+      <v-icon size="large">
+        mdi-home-clock-outline
+      </v-icon>
+    </v-col>
+    <power-schedule :dialog-visible-prop="displaySchedule" />
+  </v-card>
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
@@ -27,44 +27,44 @@ const displaySchedule = ref(false)
 
 onMounted(async () => {
   try {
-  loading.value = true
-  const currentTimeInISOFormat  = currentTimeUTCOption2;
-  const [datePart, timePart] = currentTimeInISOFormat.split('T');
-  const [year, month, day] = datePart.split('-');
-  const currentTime = new Date(Date.parse(currentTimeInISOFormat));
-  currentTime.setHours(currentTime.getHours() + 1);
-  const hourLater = new Date(currentTime.getTime() + (60 * 60 * 1000));
-  const hourLaterISO = hourLater.toISOString().slice(0, -5) + currentTimeInISOFormat.slice(-6);
-  const priceArea = 'NO1';
-  const powerData = await getCurrentPowerPrice(year, month, day, priceArea);
-  const matchedPowerPriceSeries = powerData.find(
-        (powerPriceSeries: PowerPriceSeries) => {
-            return powerPriceSeries.time_start === currentTimeInISOFormat && powerPriceSeries.time_end === hourLaterISO
-        }
+    loading.value = true
+    const currentTimeInISOFormat = currentTimeUTCOption2;
+    const [datePart, timePart] = currentTimeInISOFormat.split('T');
+    const [year, month, day] = datePart.split('-');
+    const currentTime = new Date(Date.parse(currentTimeInISOFormat));
+    currentTime.setHours(currentTime.getHours() + 1);
+    const hourLater = new Date(currentTime.getTime() + (60 * 60 * 1000));
+    const hourLaterISO = hourLater.toISOString().slice(0, -5) + currentTimeInISOFormat.slice(-6);
+    const priceArea = 'NO1';
+    const powerData = await getCurrentPowerPrice(year, month, day, priceArea);
+    const matchedPowerPriceSeries = powerData.find(
+      (powerPriceSeries: PowerPriceSeries) => {
+        return powerPriceSeries.time_start === currentTimeInISOFormat && powerPriceSeries.time_end === hourLaterISO
+      }
     );
     if (matchedPowerPriceSeries) {
       let value = matchedPowerPriceSeries.NOK_per_kWh;
-    let formattedValue;
-    if (value >= 1) {
-        formattedValue = Math.floor(value); 
-    } else {
-        formattedValue = Math.floor(value * 100); 
+      let formattedValue;
+      if (value >= 1) {
+        formattedValue = Math.floor(value);
+      } else {
+        formattedValue = Math.floor(value * 100);
+      }
+      powerPrice.value = formattedValue;
     }
-    powerPrice.value = formattedValue;   
-  }
-    if(powerPrice.value < 100) {
+    if (powerPrice.value < 100) {
       fontColor.value = 'green'
     } else {
       fontColor.value = 'red'
-    } 
+    }
   } catch (error) {
     console.error('Error fetching powerprice data:', error);
   } finally {
     loading.value = false
   }
 });
-function toggleDisplaySchedule () {
-  if(displaySchedule.value === true) {
+function toggleDisplaySchedule() {
+  if (displaySchedule.value === true) {
     displaySchedule.value = false
   } else {
     displaySchedule.value = true

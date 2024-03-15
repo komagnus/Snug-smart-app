@@ -19,8 +19,9 @@
           label="Clientsecret" placeholder="Enter your airthings account ClientSecret"></v-text-field>
         <v-text-field v-if="expandedForm" v-model="serialNumber" :readonly="loading" :rules="[required]" clearable
           label="Serialnumber" placeholder="Enter your airthings device SerialNumber"></v-text-field>
-        <v-text-field type="number" v-if="expandedForm" v-model="priceLimit" :readonly="loading" :rules="[required]" clearable
-          label="Price limit in NOK Øre" placeholder="Enter your desired pricelimit for electricity price"></v-text-field>
+        <v-text-field type="number" v-if="expandedForm" v-model="priceLimit" :readonly="loading" :rules="[required]"
+          clearable label="Price limit in NOK Øre"
+          placeholder="Enter your desired pricelimit for electricity price"></v-text-field>
         <v-btn v-if="expandedForm" @click="displayWlFields = true">Add weatherlink station?</v-btn>
         <v-text-field v-if="displayWlFields" v-model="wlstation" placeholder="Weatherlink station ID"></v-text-field>
         <v-text-field v-if="displayWlFields" v-model="wlapikey" placeholder="Weatherlink api key"></v-text-field>
@@ -36,8 +37,8 @@
         </div>
         <v-checkbox v-if="expandedForm" v-model="skipCheck" label="Test User"></v-checkbox>
         <br>
-        <v-btn v-if="!expandedForm" :disabled="!form" :loading="loading" block color="success" size="large" type="submit"
-          variant="elevated">
+        <v-btn v-if="!expandedForm" :disabled="!form" :loading="loading" block color="success" size="large"
+          type="submit" variant="elevated">
           Sign In
         </v-btn>
         <v-btn v-else :disabled="!form" :loading="loading" block type="submit" color="success" size="large"
@@ -48,7 +49,7 @@
     </v-card>
   </v-container>
 </template>
-  
+
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { getUserFromDB, getDeviceFromDB, addUserToDB, addDeviceToDB, createAccountToken, getDeviceInfo, getLocationInfo, getWeatherStationFromDB, addWeatherStationToDB, getLimitsFromDB, addLimitsToDB } from '@/utils/APIRequests'
@@ -107,7 +108,7 @@ async function getUser() {
           currentUser.WeatherStation.ApiSecret = weatherStation.document.wlapisecret
         }
         const userLimits = await getLimitsFromDB(id.value)
-        if(userLimits.document !== null) {
+        if (userLimits.document !== null) {
           priceLimit.value = userLimits.document.pricelimit
         }
         router.push('/mainContent')
@@ -209,4 +210,3 @@ function required(v: any) {
   return !!v || 'Field is required'
 }
 </script>
-  

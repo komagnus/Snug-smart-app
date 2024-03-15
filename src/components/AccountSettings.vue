@@ -56,6 +56,7 @@ function toggleEditAccount() {
     showEditAccountFields.value = false
   }
 }
+
 function signOut() {
   userStore.User.IsLoggedIn = false
   router.push('/')
