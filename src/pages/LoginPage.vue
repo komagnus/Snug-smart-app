@@ -111,7 +111,7 @@ async function getUser() {
         if (userLimits.document !== null) {
           priceLimit.value = userLimits.document.pricelimit
         }
-        router.push('/mainContent')
+        router.push('/MainContent')
       } else {
         incorrectLogin.value = true
       }
@@ -132,7 +132,7 @@ async function getUser() {
     currentUser.ClientLocation.Lng = lng.value
     valueLimits.PriceLimit = priceLimit.value
     if (loggedIn.value) {
-      router.push('/mainContent')
+      router.push('/MainContent')
     }
     loading.value = false;
   }
@@ -181,7 +181,7 @@ async function addUser() {
     }
     valueLimits.PriceLimit = priceLimit.value
     if (currentUser.IsLoggedIn) {
-      router.push('/mainContent')
+      router.push('/MainContent')
     }
     loading.value = false;
   }
